@@ -188,3 +188,5 @@ include_directories(
 
 add_executable(udometer src/udometer.cpp)
 target_link_libraries(udometer ${catkin_LIBRARIES})
+target_link_libraries(udometer curl)
+target_link_libraries(udometer curlpp)
