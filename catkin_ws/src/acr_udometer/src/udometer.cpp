@@ -89,7 +89,7 @@ int main(int argc, char **argv) {
 		ros::spinOnce();
 		
 		// Sleep 60x 5 seconds to allow stopping the program every 5 seconds, instead of once per 5 minutes :P
-		for(int i=0; i < 60; i++) {
+		for(int i=0; i < 60 && ros::ok(); i++) {
 			loop_rate.sleep();
 		}
 	}
