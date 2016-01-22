@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include "buienradar.cpp"
 
+using namespace ros;
 /**
  * ROS node that sends weather information every 5 minutes on 'udometer'.
  * Uses a Buienradar API for gathering of the weather data.
@@ -10,14 +11,14 @@
  * 	z: rain value after the change in mm/h
  */
 int main(int argc, char **argv) {
-	ros::init(argc, argv, "udometer");
-	ros::NodeHandle n;
+	init(argc, argv, "udometer");
+	NodeHandle n;
 
-	ros::Publisher udometer_pub = n.advertise<geometry_msgs::Vector3>("udometer", 5);
+	Publisher udometer_pub = n.advertise<geometry_msgs::Vector3>("udometer", 5);
 
-	ros::Rate loop_rate(1.f/5.f);	// 5 seconds = 1/5 Hz
+	Rate loop_rate(1.f/5.f);	// 5 seconds = 1/5 Hz
 	int loopCount;
-	while (ros::ok()) {
+	while (ok()) {
 		try{
 			udometer_pub.publish(getBuienradarData());
 			loopCount = 60;	// 5 minutes
@@ -26,10 +27,10 @@ int main(int argc, char **argv) {
 			loopCount = 1;	// 5 seconds
 		}
 
-		ros::spinOnce();
+		spinOnce();
 		
 		// Sleep loopCount x 5 seconds to allow stopping the program every 5 seconds, instead of once per 5 minutes :P
-		for(int i=0; i < loopCount && ros::ok(); i++) {
+		for(int i=0; i < loopCount && ok(); i++) {
 			loop_rate.sleep();
 		}
 	}
