@@ -49,9 +49,6 @@ target_link_libraries(udometer curlpp)
 
 ## Add gtest based cpp test target and link libraries
 catkin_add_gtest(udometer-test test/test_udometer.cpp)
-target_link_libraries(udometer-test ${catkin_LIBRARIES})
-target_link_libraries(udometer-test curl)
-target_link_libraries(udometer-test curlpp)
 
 
 

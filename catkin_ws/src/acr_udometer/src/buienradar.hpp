@@ -11,6 +11,13 @@
 geometry_msgs::Vector3 parseBuienradarData(std::string str);
 
 /**
+ * Get rain data from the Buienradar API.
+ * Requests the page and parses it.
+ * @return A geometry_msgs/Vector3 message containing parsed weather data.
+ */
+geometry_msgs::Vector3 getBuienradarData();
+
+/**
  * Calculates the actual rain rate in mm/h from the data format used by the Buienradar API.
  * @param Integer value [0-255] as provided by the API.
  * @return The rain rate in mm/h rounded to two decimals.
