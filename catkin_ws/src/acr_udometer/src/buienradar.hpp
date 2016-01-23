@@ -5,6 +5,11 @@
 /**
  * Parser for the Buienradar API data.
  * Creates a message that can be send by this node.
+ * The message is of the following layout:
+ *  x: current rain in mm/h
+ * 	y: condition change time in minutes from now (5 minute precision) (-1 when no change ahead)
+ * 	z: rain value after the change in mm/h
+ * 
  * @param A std::string containing the data provided by the API.
  * @return A geometry_msgs/Vector3 message containing parsed weather data.
  */
@@ -24,5 +29,5 @@ geometry_msgs::Vector3 getBuienradarData();
  */
 float buienradarCalc(int value) {
 	float val = (value - 109) / 32.f;
-	return roundf(pow(10.f, val) * 100.f) / 100.f;
+	return roundf(pow(10.f, val) * 1000.f) / 1000.f;
 }

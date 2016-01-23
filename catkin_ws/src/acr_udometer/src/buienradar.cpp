@@ -4,7 +4,7 @@
 #include <curlpp/cURLpp.hpp>
 #include <curlpp/Options.hpp>
 
-#define BUIENRADAR_TRESHOLD 3	// value that must be reached before it is registered as 'rain'.
+#define BUIENRADAR_TRESHOLD 10	// Value that must be reached before it is registered as 'rain'.
 
 geometry_msgs::Vector3 getBuienradarData() {
 	std::ostringstream os;		
@@ -19,11 +19,12 @@ geometry_msgs::Vector3 parseBuienradarData(std::string str) {
 	geometry_msgs::Vector3 msg = geometry_msgs::Vector3();
 	msg.x = buienradarCalc(std::stoi(str.substr(0, 3)));
 	 ROS_INFO("Current rain: %f mm/h", msg.x);
+	msg.y = -1; // default
 	
 	int lines = str.length() / 11;
-	for(int i = 0; i < lines; i++) {	// For each line
+	for(int i = 1; i < lines; i++) {	// For each line
 		int amount = std::stoi(str.substr(11*i, 3));
-		if(msg.x > 0.f) {	// If it is raining
+		if(msg.x > 0.f) {	// If it is raining			
 			if(amount == 0) {	// and becoming dry
 				msg.y = i * 5.f;
 				msg.z = 0;
