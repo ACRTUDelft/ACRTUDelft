@@ -48,10 +48,10 @@ target_link_libraries(udometer curlpp)
 #############
 
 ## Add gtest based cpp test target and link libraries
-catkin_add_gtest(udometer-test test/test_udometer.cpp)
-target_link_libraries(udometer-test ${catkin_LIBRARIES})
-target_link_libraries(udometer-test curl)
-target_link_libraries(udometer-test curlpp)
+catkin_add_gtest(buienradar-test test/test_buienradar.cpp)
+target_link_libraries(buienradar-test ${catkin_LIBRARIES})
+target_link_libraries(buienradar-test curl)
+target_link_libraries(buienradar-test curlpp)
 
 
 

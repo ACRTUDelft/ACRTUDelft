@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
 	int loopCount;
 	while (ok()) {
 		try{
-			udometer_pub.publish(getBuienradarData());
+			udometer_pub.publish(getBuienradarData(52, 4)); //rain data for Delft
 			loopCount = 60;	// 5 minutes
 		} catch( curlpp::RuntimeError &e ) {
 			ROS_WARN("%s - You might not have a working internet connection or the service is down.", e.what());

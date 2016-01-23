@@ -6,9 +6,9 @@
 
 #define BUIENRADAR_TRESHOLD 10	// Value that must be reached before it is registered as 'rain'.
 
-geometry_msgs::Vector3 getBuienradarData() {
+geometry_msgs::Vector3 getBuienradarData(int lat, int lon) {
 	std::ostringstream os;		
-	os << curlpp::options::Url("http://gps.buienradar.nl/getrr.php?lat=52&lon=4");	//rain data for Delft
+	os << curlpp::options::Url("http://gps.buienradar.nl/getrr.php?lat=" + std::to_string(lat) + "&lon=" + std::to_string(lon));
 	//ROS_INFO("%s", os.str().c_str());
 		
 	geometry_msgs::Vector3 msg = parseBuienradarData(os.str());	
@@ -25,20 +25,21 @@ geometry_msgs::Vector3 parseBuienradarData(std::string str) {
 	for(int i = 1; i < lines; i++) {	// For each line
 		int amount = std::stoi(str.substr(11*i, 3));
 		if(msg.x > 0.f) {	// If it is raining			
-			if(amount == 0) {	// and becoming dry
+			if(amount < BUIENRADAR_TRESHOLD) {	// and becoming dry
 				msg.y = i * 5.f;
 				msg.z = 0;
-				 ROS_INFO("\nWeather becomes dry in %i minutes.", (int) msg.y);
+				 ROS_INFO("Weather becomes dry in %i minutes.", (int) msg.y);
 				break;
 			}
 		} else {	// If it is dry
 			if(amount > BUIENRADAR_TRESHOLD) {	// and starts raining
 				msg.y = i * 5.f;
 				msg.z = buienradarCalc(amount);
-				 ROS_INFO("\nIt will start raining (%f mm/h) in %i minutes.", msg.z, (int) msg.y);
+				 ROS_INFO("It will start raining (%f mm/h) in %i minutes.", msg.z, (int) msg.y);
 				break;
 			}
 		}
 	}
+	if(msg.y == -1) ROS_INFO("No change in weather for a while..");
 	return msg;
 }
