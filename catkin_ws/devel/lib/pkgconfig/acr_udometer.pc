@@ -1,0 +1,8 @@
+prefix=/home/chiel/Documents/ACRTUDelft/catkin_ws/devel
+
+Name: acr_udometer
+Description: Description of acr_udometer
+Version: 0.1.0
+Cflags: 
+Libs: -L/home/chiel/Documents/ACRTUDelft/catkin_ws/devel/lib 
+Requires: 
