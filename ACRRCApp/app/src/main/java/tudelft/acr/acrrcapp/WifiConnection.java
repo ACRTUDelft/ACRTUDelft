@@ -1,7 +1,5 @@
 package tudelft.acr.acrrcapp;
 
-import android.util.Log;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -171,7 +169,6 @@ public class WifiConnection {
             try {
                 InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
                 socket = new Socket(serverAddr, SERVER_PORT);
-                Log.wtf("Socket", "Hello: "+ socket.toString());
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
