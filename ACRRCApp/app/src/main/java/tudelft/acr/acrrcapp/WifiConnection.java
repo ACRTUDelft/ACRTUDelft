@@ -127,9 +127,7 @@ public class WifiConnection {
     public void send(float linear, float angular) throws IllegalArgumentException{
         try {
             PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), false);
-            for (int i = 0; i < 3; i++) {
-                out.println(linear);
-            }
+            out.println(linear);
             out.println(angular);
             out.flush();
 
