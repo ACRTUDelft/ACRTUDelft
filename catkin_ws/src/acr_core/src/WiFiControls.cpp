@@ -13,7 +13,6 @@ int main(int argc, char **argv) {
 	init(argc, argv, "WiFiControls");
 	NodeHandle nh;
 
-	//Publisher wifiC_pub = nh.advertise<geometry_msgs::Twist>("turtle1/cmd_vel", 5);		// For the turtle
 	Publisher wifiC_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 5);
 	
 	int sockfd, newsockfd, portno;

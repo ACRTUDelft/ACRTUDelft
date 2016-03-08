@@ -25,10 +25,15 @@ catkin_package()
 ## Build ##
 ###########
 
-## Specify additional locations of header files
+## Allow c++11
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
+
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
+
+add_executable(turtleBridge src/turtleBridge.cpp)
+target_link_libraries(turtleBridge ${catkin_LIBRARIES})
 
 #############
 ## Install ##
