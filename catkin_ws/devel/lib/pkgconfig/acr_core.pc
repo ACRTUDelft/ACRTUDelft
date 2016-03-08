@@ -1,8 +1,0 @@
-prefix=/home/chiel/Documents/ACRTUDelft/catkin_ws/devel
-
-Name: acr_core
-Description: Description of acr_core
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/chiel/Documents/ACRTUDelft/catkin_ws/devel/lib 
-Requires: 

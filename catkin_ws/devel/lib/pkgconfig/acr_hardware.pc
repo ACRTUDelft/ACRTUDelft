@@ -1,8 +1,0 @@
-prefix=/home/chiel/Documents/ACRTUDelft/catkin_ws/devel
-
-Name: acr_hardware
-Description: Description of acr_hardware
-Version: 0.0.1
-Cflags: 
-Libs: -L/home/chiel/Documents/ACRTUDelft/catkin_ws/devel/lib 
-Requires: 

@@ -1,8 +1,0 @@
-prefix=/home/chiel/Documents/ACRTUDelft/catkin_ws/devel
-
-Name: acr_status
-Description: Description of acr_status
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/chiel/Documents/ACRTUDelft/catkin_ws/devel/lib 
-Requires: 
