@@ -32,8 +32,10 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(core src/core.cpp)
-target_link_libraries(core ${catkin_LIBRARIES})
+add_executable(udometer src/udometer.cpp)
+target_link_libraries(udometer ${catkin_LIBRARIES})
+target_link_libraries(udometer curl)
+target_link_libraries(udometer curlpp)
 
 #############
 ## Install ##
