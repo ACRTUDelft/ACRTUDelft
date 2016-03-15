@@ -4,6 +4,7 @@ project(acr_core)
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
+  sensor_msgs
   roscpp
 )
 

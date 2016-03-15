@@ -1,13 +1,5 @@
-#define MOD1 0
-#define MOD2 1
-#define MOD3 2
-
-#define U_LEFT 0
-#define U_FRONT_TOP 1
-#define U_FRONT_BOTTOM 2
-#define U_RIGHT 3
-
-#include "states/sensorData.hpp"
+#include "consts.hpp"
+#include "states/sensorData.cpp"
 #include "states/state.cpp"
 #include "states/state_idle.cpp"
 
