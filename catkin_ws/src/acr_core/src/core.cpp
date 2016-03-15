@@ -7,7 +7,7 @@
 #define U_FRONT_BOTTOM 2
 #define U_RIGHT 3
 
-#include "states/SensorData.hpp"
+#include "states/sensorData.hpp"
 #include "states/state.cpp"
 #include "states/state_idle.cpp"
 
