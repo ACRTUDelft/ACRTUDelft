@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
 				/* Create ROS message */
 				geometry_msgs::Twist msg;
 				 msg.linear.x = std::stof(data.substr(0, br));
-				 msg.angular.z = std::stof(data.substr(br, 256));
+				 msg.angular.z = -std::stof(data.substr(br, 256));
 				
 				wifiC_pub.publish(msg);			
 				spinOnce();

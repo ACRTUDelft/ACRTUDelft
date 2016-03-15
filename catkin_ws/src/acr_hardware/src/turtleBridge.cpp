@@ -8,11 +8,8 @@ Publisher pub;
 /* Callback method for received messages.
  * Converts the message to the correct format and publishes it to the node.
  */
-void msgCallback(const geometry_msgs::Twist& msg) {
-  geometry_msgs::Twist turtleMsg;
-   turtleMsg.linear.x = msg.linear.x;
-   turtleMsg.angular.z = -msg.angular.z;   
-  pub.publish(turtleMsg);		
+void msgCallback(const geometry_msgs::Twist& msg) {   
+  pub.publish(msg);		
 }
 
 int main(int argc, char **argv) {
