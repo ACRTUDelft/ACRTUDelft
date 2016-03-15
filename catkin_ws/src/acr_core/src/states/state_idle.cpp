@@ -1,4 +1,4 @@
-#include "stateSensorData.hpp"
+#include "SensorData.hpp"
 #include "ros/ros.h"
 
 /* Class representing the idle state.
