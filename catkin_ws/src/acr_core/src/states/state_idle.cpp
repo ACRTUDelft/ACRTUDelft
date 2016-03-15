@@ -9,16 +9,15 @@ class State_Idle : public State {
 	*State_Idle() { } 
 	
 	State* update() override {
-		ROS_INFO("Update called");
-		if(SensorData::isFree(0) == false) ROS_INFO(" - false");	// example
-		return new State_Idle();
+		ROS_INFO("Update called, let me idle..");
+		return this;
 	}
     
     void switchTo() override {
-		ROS_INFO("switched to idle state");
+		ROS_INFO("switched to Idle state");
 	}
     
     void switchFrom() override {
-		ROS_INFO("switched from idle state");
+		ROS_INFO("switched from Idle state");
 	}
 };

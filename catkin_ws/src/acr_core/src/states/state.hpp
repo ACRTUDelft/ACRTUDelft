@@ -5,6 +5,8 @@
 
 /* Class representing an abstact state.
  * The methods print an error message by default.
+ * 
+ * See state_example.cpp for an example of a state implementation.
  */
 class State {
   public:
