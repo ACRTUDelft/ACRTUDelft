@@ -4,6 +4,7 @@ project(acr_core)
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
+  sensor_msgs
   roscpp
 )
 
@@ -25,10 +26,15 @@ catkin_package()
 ## Build ##
 ###########
 
-## Specify additional locations of header files
+## Allow c++11
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
+
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
+
+add_executable(core src/core.cpp)
+target_link_libraries(core ${catkin_LIBRARIES})
 
 #############
 ## Install ##
