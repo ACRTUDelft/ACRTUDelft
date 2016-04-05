@@ -33,6 +33,9 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+add_executable(WiFiControls src/WiFiControls.cpp)
+target_link_libraries(WiFiControls ${catkin_LIBRARIES})
+
 add_executable(core src/core.cpp)
 target_link_libraries(core ${catkin_LIBRARIES})
 
