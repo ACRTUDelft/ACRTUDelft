@@ -4,6 +4,7 @@ project(acr_core)
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
+  sensor_msgs
   roscpp
 )
 
@@ -35,6 +36,8 @@ include_directories(
 add_executable(WiFiControls src/WiFiControls.cpp)
 target_link_libraries(WiFiControls ${catkin_LIBRARIES})
 
+add_executable(core src/core.cpp)
+target_link_libraries(core ${catkin_LIBRARIES})
 
 #############
 ## Install ##
