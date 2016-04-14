@@ -35,6 +35,10 @@ include_directories(
 add_executable(turtleBridge src/turtleBridge/turtleBridge.cpp)
 target_link_libraries(turtleBridge ${catkin_LIBRARIES})
 
+add_executable(ultrasonicSensors src/ultrasonicSensors/ultrasonicSensors.cpp)
+target_link_libraries(ultrasonicSensors ${catkin_LIBRARIES})
+target_link_libraries(ultrasonicSensors wiringPi)
+
 #############
 ## Install ##
 #############
