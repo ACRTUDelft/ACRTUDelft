@@ -31,16 +31,15 @@ int main( int argc, char **argv ){
 	imageMsg.is_bigendian = 0; // false
 	imageMsg.step = IMG_WIDTH;
 
-	//open spi port
 	SpiOpenPort(0);
+	Rate loop_rate(1.f/27.f);	// 27 FPS || 27 Hz
 
 	while(ros::ok()) {
 		uint16_t *frame;
-		
-		for(int j=0; j<PACKETS_PER_FRAME; j++) {
-			//if it's a drop packet, reset j to 0, set to -1 so he'll be at 0 again loop
-			read(spi_cs0_fd, result + sizeof(uint8_t)*PACKET_SIZE*j, sizeof(uint8_t)*PACKET_SIZE);
-			int packetNumber = result[j*PACKET_SIZE+1];
+		/* Read the stream */
+		for(int j=0; j<PACKETS_PER_FRAME; j++) {			
+			read(spi_cs0_fd, result + sizeof(uint8_t) * PACKET_SIZE * j, sizeof(uint8_t) * PACKET_SIZE);
+			int packetNumber = result[j * PACKET_SIZE + 1];
 			if(packetNumber != j) {
 				ROS_WARN("Package lost!");
 			}
@@ -51,7 +50,7 @@ int main( int argc, char **argv ){
 		uint16_t minValue = 65535;
 		uint16_t maxValue = 0;
 
-		
+		/* Determine the min/max values */
 		for(int i = 2; i < FRAME_SIZE_UINT16; i++) {
 			//flip the MSB and LSB at the last second
 			int temp = result[i*2];
@@ -70,12 +69,15 @@ int main( int argc, char **argv ){
 		float diff = maxValue - minValue;
 		float scale = 255/diff;
 		
+		/* Scale pixel values and publish the new data */
 		for(int i = 2; i < FRAME_SIZE_UINT16; i++) {
 			value = (frame[i] - minValue) * scale;
 			image[i-2] = (uint8_t) value;			
 		}
 		imageMsg.data = image;
 		pub.publish(imageMsg);
+		spinOnce();
+		loop_rate.sleep();
 	}
 	SpiClosePort(0);
 }
