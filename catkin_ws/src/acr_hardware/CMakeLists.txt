@@ -35,6 +35,9 @@ include_directories(
 add_executable(turtleBridge src/turtleBridge/turtleBridge.cpp)
 target_link_libraries(turtleBridge ${catkin_LIBRARIES})
 
+add_executable(flirLepton src/flirLepton/flirLepton.cpp)
+target_link_libraries(flirLepton ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
