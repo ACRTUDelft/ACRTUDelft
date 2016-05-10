@@ -2,6 +2,8 @@
 #include "states/sensorData.cpp"
 #include "states/state.hpp"
 #include "states/state_idle.cpp"
+#include "states/state_navigating.cpp"
+#include "visualization_server.hpp"
 
 using namespace ros;
 
@@ -9,9 +11,10 @@ int main(int argc, char** argv) {
 	init(argc, argv, "core");
 	NodeHandle nh;
 	SensorData::init(nh);
-
+	
 	Rate loop_rate(10.f);	// 10 Hz
-	State* current = new State_Idle();	// starting state
+	State* current = new State_Navigating();	// starting state
+	//Visualization_Server::start(nh);
 	current -> switchTo();
 	
 	while(ok()) {
