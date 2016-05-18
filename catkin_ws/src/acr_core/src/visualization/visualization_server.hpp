@@ -9,11 +9,11 @@ class Visualization_Server {
   public:
   
 	static ros::Publisher vis_pub;
-	static visualization_msgs::Marker marker;
-	static ros::NodeHandle nh;
+	static visualization_msgs::Marker marker;	
 	static void start(ros::NodeHandle nodehandle);	
 
-	static void update(float x, float y, float z); 
+	static void update(float linear, float angular); 
+	static float angular;			
  
 };
 

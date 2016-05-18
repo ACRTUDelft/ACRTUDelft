@@ -9,8 +9,8 @@ class State_Navigating : public State {
 	*State_Navigating() { } 
 	
 	State* update() override {
-		ROS_INFO("Driving :)");
-		SensorData::sendTwist(1.f, 1.f); 
+		//ROS_INFO("Driving :)");
+		SensorData::sendTwist(0.2f, 0.2f); 
 		return this;
 	}
     
