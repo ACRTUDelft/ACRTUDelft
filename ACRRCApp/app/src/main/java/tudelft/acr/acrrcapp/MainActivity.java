@@ -17,6 +17,11 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btn_forward;
     private Button btn_backward;
+
+    private Button btn_mod0;
+    private Button btn_mod1;
+    private Button btn_mod2;
+
     private SeekBar angularSlider;
 
     private TextView connectionStatus;
@@ -36,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
         instance = this;
         btn_forward = (Button) findViewById(R.id.btn_forward);
         btn_backward = (Button) findViewById(R.id.btn_backward);
+        btn_mod0 = (Button) findViewById(R.id.btn_mod0);
+        btn_mod1 = (Button) findViewById(R.id.btn_mod1);
+        btn_mod2 = (Button) findViewById(R.id.btn_mod2);
         angularSlider = (SeekBar) findViewById(R.id.angularSlider);
 
         connectionStatus = (TextView) findViewById(R.id.ConnectionStatus);
@@ -72,7 +80,11 @@ public class MainActivity extends AppCompatActivity {
                         f *= speed;
 
                         float a = (angularSlider.getProgress() / 50.f) - 1f;
-                        client.send(f, a);
+                        boolean[] mods = new boolean[3];
+                        mods[0] = btn_mod0.isPressed();
+                        mods[1] = btn_mod1.isPressed();
+                        mods[2] = btn_mod2.isPressed();
+                        client.send(f, a, mods);
                     }
                     try {
                         Thread.sleep(100);
