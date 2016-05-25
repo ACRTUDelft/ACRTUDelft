@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
+#include "diagnostic_msgs/KeyValue.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,13 +8,16 @@
 #include <netinet/in.h>
 #include <string.h>
 
+#define MODULES 3
+
 using namespace ros;
 
 int main(int argc, char **argv) {
 	init(argc, argv, "WiFiControls");
 	NodeHandle nh;
 
-	Publisher wifiC_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 5);
+	Publisher twist_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 5);
+	Publisher module_pub = nh.advertise<diagnostic_msgs::KeyValue>("sensor_module", 5);
 	
 	int sockfd, newsockfd, portno;
 	unsigned int clilen;
@@ -81,19 +85,47 @@ int main(int argc, char **argv) {
 				  ROS_WARN("ERROR reading from socket");
 				  break;
 				}
-				
-				std::string data = buffer;				
-				size_t br = data.find('\n', 0);
-				
-				/* Create ROS message */
-				geometry_msgs::Twist msg;
-				 msg.linear.x = std::stof(data.substr(0, br));
-				 msg.angular.z = -std::stof(data.substr(br, 256));
-				
-				wifiC_pub.publish(msg);			
-				spinOnce();
-			} catch (Exception &e) {
-				ROS_WARN("Connection lost");
+				if (n > 0) {
+					std::string s = buffer;
+									
+					/* Convert dat to data array */
+					std::string delimiter = "\n";
+					std::string data [5];
+					size_t pos = 0;
+					std::string token;
+					int c = 0;
+					while ((pos = s.find(delimiter)) != std::string::npos) {
+						token = s.substr(0, pos);
+						data[c] = token;
+						s.erase(0, pos + delimiter.length());
+						c++;
+						if(c > 4) c = 0;
+					}
+					
+					/* Create twist message */
+					geometry_msgs::Twist tmsg;
+					 tmsg.linear.x = std::stof(data[0]);
+					 tmsg.angular.z = std::stof(data[1]);
+					twist_pub.publish(tmsg);
+					
+					/* Create module messages */
+					for(int i = 2; i < 5; i++) {
+						diagnostic_msgs::KeyValue msg;
+						msg.key = "module:" + std::to_string(i);
+						if(data[i].compare("true") == 0) {
+							msg.value = std::to_string(3);		// MODULE_INTERACT
+						} else {
+							msg.value = std::to_string(2);		// MODULE_IDLE
+						}
+						module_pub.publish(msg);
+					}			
+					spinOnce();
+				} else {
+					ROS_WARN("Connection lost, please reconnect.");
+					break;
+				}							
+			} catch (...) {
+				ROS_WARN("Connection lost, please reconnect.");
 				break;
 			}
 		}
