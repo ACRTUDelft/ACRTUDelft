@@ -58,10 +58,6 @@ void SensorData::sendTwist(float angular, float linear) {
 
 void SensorData::init(NodeHandle nh) {
 	twist_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 5);
-	//module_pub = nh.advertise<diagnostic_msgs::KeyValue>("sensor_module", 5);
-	
-	//nh.subscribe("sensor_ultrasonic", 	10, ultrasonicCallback);
-	//nh.subscribe("sensor_battery", 		10, batteryCallback);
-	//nh.subscribe("sensor_module", 		10, moduleCallback);
+	module_pub = nh.advertise<diagnostic_msgs::KeyValue>("sensor_module", 5);
 }
 #endif
