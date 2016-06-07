@@ -3,14 +3,15 @@ project(acr_hardware)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
+  message_generation
   geometry_msgs
   roscpp
+  rospy
 )
 
 ################################################
 ## Declare ROS messages, services and actions ##
 ################################################
-
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -21,9 +22,14 @@ find_package(catkin REQUIRED COMPONENTS
 ###################################
 catkin_package()
 
+catkin_python_setup()
+
 ###########
 ## Build ##
 ###########
+
+catkin_install_python(PROGRAMS bin/acr
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 ## Allow c++11
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
