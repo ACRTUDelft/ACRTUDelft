@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
+#include "std_msgs/Float32.h"
 
 using namespace ros;
 
@@ -10,6 +11,10 @@ Publisher pub;
  */
 void msgCallback(const geometry_msgs::Twist& msg) {   
   pub.publish(msg);		
+}
+
+void banaan(const std_msgs::Float32& msg) {   
+  ROS_INFO("%f", msg.data);		
 }
 
 int main(int argc, char **argv) {

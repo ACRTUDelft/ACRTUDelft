@@ -1,23 +1,25 @@
-#include "sensorData.hpp"
-#include "ros/ros.h"
+#include "state_idle.hpp" 
+#include "state_navigating.cpp"
+#include "state_lookAround.cpp"
 
-/* Class representing the idle state.
- * This state is the default of the program
- */
-class State_Idle : public State {	
-  public:	
-	*State_Idle() { } 
-	
-	State* update() override {
-		ROS_INFO("Update called, let me idle..");
+#include <math.h>
+
+State_Idle::State_Idle() { }
+
+State* State_Idle::update() {
+	if(!isnan(SensorData::pointOfInterest())) {
+		ROS_INFO("%f", SensorData::pointOfInterest());
+		return new State_Navigating();
+	}
+	if(rand() % 100 < 10) {
+		return new State_LookAround();
+	} else {
 		return this;
 	}
-    
-    void switchTo() override {
-		ROS_INFO("switched to Idle state");
-	}
-    
-    void switchFrom() override {
-		ROS_INFO("switched from Idle state");
-	}
-};
+}
+
+void State_Idle::switchTo() {
+	ROS_INFO("Switched to State_Idle"); 
+}
+
+void State_Idle::switchFrom() { }

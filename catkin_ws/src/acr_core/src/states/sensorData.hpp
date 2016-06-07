@@ -25,10 +25,13 @@ class SensorData {
 	static float uDist[4];
 	static float mStat[3];
 	
+	
+	
+  public:
 	/* Callback for receiving messages about an object of interest.
 	 * Stores the horizontal angle towards the object.
 	 */
-	static void angleofInterestCallback(const std_msgs::Float32& msg) {		
+	static void angleofInterestCallback(const std_msgs::Float32& msg) {
 		angleOfInterest = msg.data;
 	}
 	
@@ -61,8 +64,6 @@ class SensorData {
 		 if(status > 1) return; // Wrong types
 		mStat[module - 1] = status;
 	}
-	
-  public:
 	
 	/* Returns the distance that the selected ultrasonic sensor receives.
 	 * If the sensor is free returns -1, else returns the measured distance.
@@ -101,5 +102,6 @@ class SensorData {
 	 * starts receiving messages from the sensors.
 	 */
 	static void init(NodeHandle nh);
+	
 };
 #endif
