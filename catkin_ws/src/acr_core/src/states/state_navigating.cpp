@@ -1,5 +1,7 @@
 #include "state_navigating.hpp"
 
+#include "state_interact.cpp"
+
 #include <math.h>
 
 #define MOVE_SPEED 1
@@ -7,12 +9,15 @@
 State_Navigating::State_Navigating() { }
 
 State* State_Navigating::update() {
-	float angle = SensorData::pointOfInterest();		
-	if(SensorData::isFree(MODULE2) > 0 && !isnan(angle)) {
+	float angle = SensorData::pointOfInterest();
+	if(isnan(angle)) return new State_Idle();
+	
+	if(SensorData::isFree(U_FRONT_TOP)) {
 		SensorData::sendTwist(-angle, MOVE_SPEED);
 		return this;
+	} else {
+		return new State_Interact();
 	}
-	return new State_Idle();
 }
 
 void State_Navigating::switchTo() { 

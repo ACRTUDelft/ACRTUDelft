@@ -13,9 +13,10 @@ Reading from the keyboard and Publishing to acr messages!
 ---------------------------
 Point of interest:
 
-w : none
+w : straight
 a : to the left
 d : to the right
+s : none
 
 ---------------------------
 Trigger the ultrasonic sensors:
@@ -43,8 +44,9 @@ CTRL-C to quit
 # Key mappings
 
 poiBindings = {
-		'w':(float('nan')),
+		's':(float('nan')),
 		'a':(-1.0),
+		'w':(0),
 		'd':(1.0),
 	       	}
 
@@ -94,7 +96,7 @@ if __name__=="__main__":
 		poi = float('nan')
 
 		ult_max = 10000
-		ult_dist = 2000
+		ult_dist = 1999
 		ult = [ult_max, ult_max, ult_max, ult_max]
 		mod = [1, 1, 1, 1]
 		bat_lvl = 1.0
@@ -106,8 +108,6 @@ if __name__=="__main__":
 			# Point of Interest
 			if key in poiBindings.keys():
 				poi = poiBindings[key]
-			else:
-				poi = float('nan')
 			
 			# Ultrasonic distance
 			if key in distModifiers.keys():
@@ -124,10 +124,9 @@ if __name__=="__main__":
 				print("\rBattery: " + str(100 * bat_lvl) + "%")
 
 			# Ultrasonic trigger
+			ult = [ult_max, ult_max, ult_max, ult_max]
 			if key in sensor_ultrasonic.keys():
 				ult[sensor_ultrasonic[key]] = ult_dist
-			else:
-				ult = [ult_max, ult_max, ult_max, ult_max]
 				
 			# Module service
 			if key in sensor_modules.keys():

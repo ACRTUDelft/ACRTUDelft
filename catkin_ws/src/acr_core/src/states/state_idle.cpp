@@ -8,7 +8,6 @@ State_Idle::State_Idle() { }
 
 State* State_Idle::update() {
 	if(!isnan(SensorData::pointOfInterest())) {
-		ROS_INFO("%f", SensorData::pointOfInterest());
 		return new State_Navigating();
 	}
 	if(rand() % 100 < 10) {

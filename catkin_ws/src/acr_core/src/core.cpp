@@ -28,7 +28,6 @@ int main(int argc, char** argv) {
 			delete current;
 			current = newState;
 		}
-		//spinOnce();
 		spinOnce();
 		loop_rate.sleep();
 	}

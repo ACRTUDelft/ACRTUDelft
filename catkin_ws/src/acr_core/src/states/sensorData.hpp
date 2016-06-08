@@ -11,6 +11,8 @@
 
 #include <string>
 
+#define ULTRASONIC_MIN_DIST 2000
+
 using namespace ros;
 
 /* Wrapper class for the sensor data.
@@ -48,7 +50,7 @@ class SensorData {
 	 * 'radiation_type' is reused to represent the sensor that measured the range.
 	 */
 	static void ultrasonicCallback(const sensor_msgs::Range& msg) {		
-		uDist[msg.radiation_type] = msg.range;
+		uDist[msg.radiation_type] = msg.range < ULTRASONIC_MIN_DIST ? 0 : msg.range;
 	}
 	
 	/* Callback for messages from the modules.
@@ -57,7 +59,8 @@ class SensorData {
 	 */
 	static void moduleCallback(const diagnostic_msgs::KeyValue& msg) {
 		char* tmp = strdup(msg.key.c_str());
-		 int module = std::stoi(strtok(tmp, ":"));	
+		strtok(tmp, ":");
+		 int module = std::stoi(strtok(NULL, ":"));	
 		delete tmp;
 		
 		int status = std::stoi(msg.value);
@@ -65,12 +68,16 @@ class SensorData {
 		mStat[module - 1] = status;
 	}
 	
-	/* Returns the distance that the selected ultrasonic sensor receives.
-	 * If the sensor is free returns -1, else returns the measured distance.
-	 * If the sensor does not exist, the method returns 0.
+	/* Returns true if the selected ultrasonic sensor is free.
+	 * If the sensor does not exist, the method returns false.
 	 */
-	static float isFree(int sensor);
+	static bool isFree(int sensor);
 
+	/* Returns the distance measured by the selected sensor.
+	 * -1 is returned when the sensor does not exist.
+	 */
+	static float getDistance(int sensor);
+	
 	/* Method for checking the battery status.
 	 * Returns true when the battery is full, else otherwise.
 	 */ 

@@ -12,18 +12,23 @@ float SensorData::batteryCharge = 0.f;
 
 float SensorData::angleOfInterest = NAN;
 
-float SensorData::uDist[4] = {1.f, 1.f, 1.f, 1.f};
+float SensorData::uDist[4] = {0, 0, 0, 0};
 float SensorData::mStat[3] = {MODULE_OK, MODULE_OK, MODULE_OK};
 	
-float SensorData::isFree(int sensor) {
-	switch(sensor) {
-		case U_LEFT: 			return uDist[U_LEFT];
-		case U_FRONT_TOP: 		return uDist[U_FRONT_TOP];
-		case U_FRONT_BOTTOM:	return uDist[U_FRONT_BOTTOM];
-		case U_RIGHT: 			return uDist[U_RIGHT];
+bool SensorData::isFree(int sensor) {
+	if(sensor > 3) {
+		ROS_WARN("Undefined sensor %d!", sensor);
+		return false;
 	}
-	ROS_WARN("Undefined sensor %d!", sensor);
-	return 0;
+	return uDist[sensor] > 0;
+}
+
+float SensorData::getDistance(int sensor) {
+	if(sensor > 3) {
+		ROS_WARN("Undefined sensor %d!", sensor);
+		return 0;
+	}
+	return uDist[sensor];
 }
 
 bool SensorData::isBatteryFull() {
@@ -44,7 +49,7 @@ float SensorData::pointOfInterest() {
 
 void SensorData::sendModule(int module, int moduleState) {
 	diagnostic_msgs::KeyValue msg = diagnostic_msgs::KeyValue();
-	 msg.key = "module:" + module;
+	 msg.key = "module:" + std::to_string(module);
 	 msg.value = std::to_string(moduleState);
 	module_pub.publish(msg);
 }

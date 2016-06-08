@@ -8,8 +8,8 @@ class State_Idle;
 #include "ros/ros.h"
 
 /* 
- * The lookAround state is the state where the robot looks around in an attempt to find a person.
- * The robot looks around for a random amount of time before it returns to the idle state.
+ * The navigating state is the state where the navigates towards a point of interest.
+ * When an object is in front of the robot it returns to the idle state or goes to the interact state.
  */
 class State_Navigating : public State {	
   public:	
