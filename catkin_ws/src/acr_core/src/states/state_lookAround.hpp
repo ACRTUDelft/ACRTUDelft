@@ -1,7 +1,7 @@
 #ifndef State_LookAround_H
 #define State_LookAround_H
 
-#include "sensorData.hpp"
+#include "../sensorData.hpp"
 
 class State_Idle;
 class State_Navigating;

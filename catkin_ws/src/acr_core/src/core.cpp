@@ -1,5 +1,5 @@
 #include "consts.hpp"
-#include "states/sensorData.cpp"
+#include "sensorData.cpp"
 #include "states/state.hpp"
 
 #include "states/state_idle.cpp"

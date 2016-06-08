@@ -1,7 +1,7 @@
 #ifndef State_Interact_H
 #define State_Interact_H
 
-#include "sensorData.hpp"
+#include "../sensorData.hpp"
 class State_Idle;
 
 #include "ros/ros.h"
