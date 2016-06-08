@@ -26,11 +26,11 @@ r : increase range
 f : decrease range
 
 ---------------------------
-Trigger module service:
+Trigger module OK/FULL:
 
-u : module 1
-i : module 2
-o : module 3
+u/j : module 1
+i/k : module 2
+o/l : module 3
 
 ---------------------------
 Change battery level
@@ -68,9 +68,12 @@ sensor_ultrasonic = {
 	      	}
 
 sensor_modules={
-		'u':(0),
-		'i':(1),
-		'o':(2),
+		'u':(0, 1),
+		'i':(1, 1),
+		'o':(2, 1),
+		'j':(0, 0),
+		'k':(1, 0),
+		'l':(2, 0),
 	      	}
 
 # get the pressed key from the console
@@ -98,7 +101,7 @@ if __name__=="__main__":
 		ult_max = 10000
 		ult_dist = 1999
 		ult = [ult_max, ult_max, ult_max, ult_max]
-		mod = [1, 1, 1, 1]
+		mod = [1, 1, 1]
 		bat_lvl = 1.0
 		while(1):
 			key = getKey()
@@ -130,9 +133,8 @@ if __name__=="__main__":
 				
 			# Module service
 			if key in sensor_modules.keys():
-				mod[sensor_modules[key]] = 0
-			else:
-				mod = [1, 1, 1, 1]
+				op = sensor_modules[key]
+				mod[op[0]] = op[1]
 			
 			# Send module messages	
 			for i, d in enumerate(mod):
