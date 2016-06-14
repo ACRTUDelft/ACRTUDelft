@@ -61,13 +61,23 @@ params.minInertiaRatio = 0.01;
 detector.detect( image, keypoints);
 
  float grootsteblob = 0;
+float interest_x = 0;
+float interest_y = 0;
+Keypoint keypoint;
 
 for(std::vector<cv::KeyPoint>::iterator blobIterator = keypoints.begin(); blobIterator != keypoints.end(); blobIterator++){
 if(blobIterator->size>grootsteblob){
    grootsteblob=blobIterator->size;
  angle = (blobIterator->pt.x-IMG_WIDTH/2)/IMG_WIDTH*FOV;
+keypoint = blobIterator;
+
 }
 } 
+
+Mat im_with_keypoints;
+drawKeypoints( im, keypoint, im_with_keypoints, Scalar(0,0,255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS );
+ imshow("keypoint", im_with_keypoints );
+
 output.data = angle;
     pub_.publish(output);
   }
