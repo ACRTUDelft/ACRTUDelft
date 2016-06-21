@@ -1,6 +1,7 @@
 #include "state_navigating.hpp"
 
-#include "state_interact.cpp"
+
+#include "state_roaming.cpp"
 
 #include <math.h>
 
@@ -9,7 +10,8 @@
 State_Navigating::State_Navigating() { }
 
 State* State_Navigating::update() {
-	float angle = SensorData::pointOfInterest();
+	return new State_Roaming();
+	/**float angle = SensorData::pointOfInterest();
 	if(isnan(angle)) return new State_Idle();
 	
 	if(SensorData::isFree(U_FRONT_TOP)) {
@@ -17,7 +19,7 @@ State* State_Navigating::update() {
 		return this;
 	} else {
 		return new State_Interact();
-	}
+	}**/
 }
 
 void State_Navigating::switchTo() { 

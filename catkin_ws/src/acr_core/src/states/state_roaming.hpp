@@ -5,6 +5,7 @@
 
 class State_Idle;
 class State_Navigating;
+class State_Roaming;
 
 #include "../consts.hpp"
 #include "ros/ros.h"
