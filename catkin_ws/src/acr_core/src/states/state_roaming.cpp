@@ -1,12 +1,14 @@
 #include "state_roaming.hpp"
 
+#include "state_approaching.cpp"
+
 #include <math.h>
 
 State_Roaming::State_Roaming() { }
 
 State* State_Roaming::update() {
 	if(!isnan(SensorData::pointOfInterest())) {
-		return new State_Navigating();
+		return new State_Approaching();
 	}
 	if(rand() % 100 < 5) {
 		return new State_Idle();

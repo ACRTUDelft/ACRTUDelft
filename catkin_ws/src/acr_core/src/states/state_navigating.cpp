@@ -1,6 +1,5 @@
 #include "state_navigating.hpp"
 
-
 #include "state_roaming.cpp"
 
 #include <math.h>

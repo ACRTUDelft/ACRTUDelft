@@ -4,7 +4,7 @@
 #include "../sensorData.hpp"
 
 class State_Idle;
-class State_Navigating;
+class State_Approaching;
 class State_Roaming;
 
 #include "../consts.hpp"

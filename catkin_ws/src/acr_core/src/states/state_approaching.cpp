@@ -1,7 +1,7 @@
 #include "state_approaching.hpp"
 
 
-State_Idle::State_Idle() { }
+State_Approaching::State_Approaching() { }
 
 State* State_Approaching::update() {
 	//if(!isnan(SensorData::pointOfInterest())) {
@@ -14,8 +14,8 @@ State* State_Approaching::update() {
 	} **/
 }
 
-void State_Idle::switchTo() {
+void State_Approaching::switchTo() {
 	ROS_INFO("Switched to State_Approaching"); 
 }
 
-void State_Idle::switchFrom() { }
+void State_Approaching::switchFrom() { }
