@@ -7,14 +7,14 @@
 State_Idle::State_Idle() { }
 
 State* State_Idle::update() {
-	if(!isnan(SensorData::pointOfInterest())) {
+	//if(!isnan(SensorData::pointOfInterest())) {
 		return new State_Navigating();
-	}
+	/**}
 	if(rand() % 100 < 10) {
 		return new State_LookAround();
 	} else {
 		return this;
-	}
+	} **/
 }
 
 void State_Idle::switchTo() {
