@@ -1,10 +1,10 @@
-#include "state_lookAround.hpp"
+#include "state_roaming.hpp"
 
 #include <math.h>
 
-State_LookAround::State_LookAround() { }
+State_Roaming::State_Roaming() { }
 
-State* State_LookAround::update() {
+State* State_Roaming::update() {
 	if(!isnan(SensorData::pointOfInterest())) {
 		return new State_Navigating();
 	}
@@ -16,10 +16,10 @@ State* State_LookAround::update() {
 	}
 }
 
-void State_LookAround::switchTo() { 
-		ROS_INFO("Switched to State_LookAround");
+void State_Roaming::switchTo() { 
+		ROS_INFO("Switched to State_Roaming");
 }
 
-void State_LookAround::switchFrom() {
+void State_Roaming::switchFrom() {
 	SensorData::sendTwist(0.f, 0.f); // stop turning!
 }

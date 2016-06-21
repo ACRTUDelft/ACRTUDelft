@@ -1,5 +1,5 @@
-#ifndef State_LookAround_H
-#define State_LookAround_H
+#ifndef State_Roaming_H
+#define State_Roaming_H
 
 #include "../sensorData.hpp"
 
@@ -13,9 +13,9 @@ class State_Navigating;
  * The lookAround state is the state where the robot looks around in an attempt to find a person.
  * The robot looks around for a random amount of time before it returns to the idle state.
  */
-class State_LookAround : public State {	
+class State_Roaming : public State {	
   public:	
-	State_LookAround();
+	State_Roaming();
 	
 	State* update() override;
     
