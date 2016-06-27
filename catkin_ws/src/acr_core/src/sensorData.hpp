@@ -41,16 +41,25 @@ class SensorData {
 	 * Stores the the received status.
 	 * The value is between 0 (empty) and 1 (full).
 	 */
-	static void batteryCallback(const std_msgs::Float32& msg) {		
-		batteryCharge = msg.data;
+	static void batteryCallback(const std_msgs::Float32& msg) {	
+		float charge = msg.data;
+		if(charge > 1.f || charge < 0.f) {
+			ROS_WARN("Invalid charge %.2f, the value must be between 0 and 1", charge);
+		}
+		batteryCharge = charge;
 	}
 	
 	/* Callback for range measurements.
 	 * Only stores the received range.
 	 * 'radiation_type' is reused to represent the sensor that measured the range.
 	 */
-	static void ultrasonicCallback(const sensor_msgs::Range& msg) {		
-		uDist[msg.radiation_type] = msg.range < ULTRASONIC_MIN_DIST ? 0 : msg.range;
+	static void ultrasonicCallback(const sensor_msgs::Range& msg) {	
+		int sensor = msg.radiation_type;
+		if (sensor < 0 || sensor > 3) {
+			ROS_WARN("Unknown sensor %d", sensor);
+			return;
+		}
+		uDist[sensor] = (msg.range < ULTRASONIC_MIN_DIST) ? 0 : msg.range;
 	}
 	
 	/* Callback for messages from the modules.
