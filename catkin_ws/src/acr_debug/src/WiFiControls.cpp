@@ -49,7 +49,7 @@ void parseMessage(char buffer[], Publisher twist_pub, Publisher module_pub) {
 	/* Create twist message */
 	geometry_msgs::Twist tmsg;
 	 tmsg.linear.x = std::stof(data[0]);
-	 tmsg.angular.z = std::stof(data[1]);
+	 tmsg.angular.z = -std::stof(data[1]);
 	twist_pub.publish(tmsg);
 	
 	/* Create module messages */
