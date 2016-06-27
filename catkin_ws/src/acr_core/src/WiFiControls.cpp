@@ -7,10 +7,60 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <string.h>
+#include <vector>
+
+#include "consts.hpp"
 
 #define MODULES 3
 
 using namespace ros;
+using namespace std;
+
+vector<string> split(const string& str, const char& ch) {
+	ROS_INFO("%s", str.c_str());
+	string next;
+	vector<string> result;
+
+	for (string::const_iterator it = str.begin(); it != str.end(); it++) {
+		if (*it == ch) {
+			if (!next.empty()) {
+				result.push_back(next);
+				next.clear();
+			}
+		} else {
+			next += *it;
+		}
+	}
+	if (!next.empty()) {
+		result.push_back(next);
+	}
+	for (size_t i = 0; i < result.size(); i++) {
+        ROS_INFO("%s", result[i].c_str());
+    }
+	return result;
+}
+
+void parseMessage(char buffer[], Publisher twist_pub, Publisher module_pub) {
+	std::vector<string> data = split (buffer, '\n');						
+					
+	/* Create twist message */
+	geometry_msgs::Twist tmsg;
+	 tmsg.linear.x = std::stof(data[0]);
+	 tmsg.angular.z = std::stof(data[1]);
+	twist_pub.publish(tmsg);
+	
+	/* Create module messages */
+	for(int i = 2; i < 5; i++) {
+		diagnostic_msgs::KeyValue msg;
+		msg.key = "module:" + std::to_string(i);
+		if(data[i].compare("true") == 0) {
+			msg.value = std::to_string(MODULE_INTERACT); 
+		} else {
+			msg.value = std::to_string(MODULE_IDLE);
+		}
+		module_pub.publish(msg);
+	}			
+}
 
 int main(int argc, char **argv) {
 	init(argc, argv, "WiFiControls");
@@ -63,9 +113,10 @@ int main(int argc, char **argv) {
 		FD_SET(sockfd, &rfds);
     
 		int retval = select(FD_SETSIZE, &rfds, NULL, NULL, &tv);
-	    if (retval == -1)
+	    if (retval == -1) {
 			ROS_WARN("select()");
-		else if (retval == 0) {	// Timeout
+			continue;
+		} else if (retval == 0) {	// Timeout
 			continue;
 		}
 		newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
@@ -86,46 +137,14 @@ int main(int argc, char **argv) {
 				  break;
 				}
 				if (n > 0) {
-					std::string s = buffer;
-									
-					/* Convert dat to data array */
-					std::string delimiter = "\n";
-					std::string data [5];
-					size_t pos = 0;
-					std::string token;
-					int c = 0;
-					while ((pos = s.find(delimiter)) != std::string::npos) {
-						token = s.substr(0, pos);
-						data[c] = token;
-						s.erase(0, pos + delimiter.length());
-						c++;
-						if(c > 4) c = 0;
-					}
-					
-					/* Create twist message */
-					geometry_msgs::Twist tmsg;
-					 tmsg.linear.x = std::stof(data[0]);
-					 tmsg.angular.z = std::stof(data[1]);
-					twist_pub.publish(tmsg);
-					
-					/* Create module messages */
-					for(int i = 2; i < 5; i++) {
-						diagnostic_msgs::KeyValue msg;
-						msg.key = "module:" + std::to_string(i);
-						if(data[i].compare("true") == 0) {
-							msg.value = std::to_string(3);		// MODULE_INTERACT
-						} else {
-							msg.value = std::to_string(2);		// MODULE_IDLE
-						}
-						module_pub.publish(msg);
-					}			
+					parseMessage(buffer, twist_pub, module_pub);
 					spinOnce();
 				} else {
 					ROS_WARN("Connection lost, please reconnect.");
 					break;
 				}							
 			} catch (...) {
-				ROS_WARN("Connection lost, please reconnect.");
+				ROS_WARN("Error while processing the data, please reconnect.");
 				break;
 			}
 		}
