@@ -1,7 +1,7 @@
 #ifndef SensorData_H
 #define SensorData_H
 
-#include "../consts.hpp"
+#include "consts.hpp"
 
 #include "ros/ros.h"
 #include "sensor_msgs/Range.h"
@@ -10,6 +10,8 @@
 #include "geometry_msgs/Twist.h"
 
 #include <string>
+
+#define ULTRASONIC_MIN_DIST 2000
 
 using namespace ros;
 
@@ -25,10 +27,13 @@ class SensorData {
 	static float uDist[4];
 	static float mStat[3];
 	
+	
+	
+  public:
 	/* Callback for receiving messages about an object of interest.
 	 * Stores the horizontal angle towards the object.
 	 */
-	static void angleofInterestCallback(const std_msgs::Float32& msg) {		
+	static void angleofInterestCallback(const std_msgs::Float32& msg) {
 		angleOfInterest = msg.data;
 	}
 	
@@ -45,7 +50,7 @@ class SensorData {
 	 * 'radiation_type' is reused to represent the sensor that measured the range.
 	 */
 	static void ultrasonicCallback(const sensor_msgs::Range& msg) {		
-		uDist[msg.radiation_type] = msg.range;
+		uDist[msg.radiation_type] = msg.range < ULTRASONIC_MIN_DIST ? 0 : msg.range;
 	}
 	
 	/* Callback for messages from the modules.
@@ -54,7 +59,8 @@ class SensorData {
 	 */
 	static void moduleCallback(const diagnostic_msgs::KeyValue& msg) {
 		char* tmp = strdup(msg.key.c_str());
-		 int module = std::stoi(strtok(tmp, ":"));	
+		strtok(tmp, ":");
+		 int module = std::stoi(strtok(NULL, ":"));	
 		delete tmp;
 		
 		int status = std::stoi(msg.value);
@@ -62,14 +68,16 @@ class SensorData {
 		mStat[module - 1] = status;
 	}
 	
-  public:
-	
-	/* Returns the distance that the selected ultrasonic sensor receives.
-	 * If the sensor is free returns -1, else returns the measured distance.
-	 * If the sensor does not exist, the method returns 0.
+	/* Returns true if the selected ultrasonic sensor is free.
+	 * If the sensor does not exist, the method returns false.
 	 */
-	static float isFree(int sensor);
+	static bool isFree(int sensor);
 
+	/* Returns the distance measured by the selected sensor.
+	 * -1 is returned when the sensor does not exist.
+	 */
+	static float getDistance(int sensor);
+	
 	/* Method for checking the battery status.
 	 * Returns true when the battery is full, else otherwise.
 	 */ 
@@ -101,5 +109,6 @@ class SensorData {
 	 * starts receiving messages from the sensors.
 	 */
 	static void init(NodeHandle nh);
+	
 };
 #endif

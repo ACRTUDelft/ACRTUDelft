@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(acr_hardware)
+project(acr_debug)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
   message_generation
+  diagnostic_msgs
   geometry_msgs
-  std_msgs
   roscpp
+  rospy
 )
 
 ################################################
@@ -22,9 +23,14 @@ find_package(catkin REQUIRED COMPONENTS
 ###################################
 catkin_package()
 
+catkin_python_setup()
+
 ###########
 ## Build ##
 ###########
+
+catkin_install_python(PROGRAMS py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 ## Allow c++11
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
@@ -32,6 +38,12 @@ set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
+
+add_executable(WiFiControls src/WiFiControls.cpp)
+target_link_libraries(WiFiControls ${catkin_LIBRARIES})
+
+add_executable(turtleBridge src/turtleBridge.cpp)
+target_link_libraries(turtleBridge ${catkin_LIBRARIES})
 
 #############
 ## Install ##
