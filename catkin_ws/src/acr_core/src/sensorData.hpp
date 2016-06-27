@@ -45,6 +45,7 @@ class SensorData {
 		float charge = msg.data;
 		if(charge > 1.f || charge < 0.f) {
 			ROS_WARN("Invalid charge %.2f, the value must be between 0 and 1", charge);
+			return;
 		}
 		batteryCharge = charge;
 	}
@@ -71,6 +72,11 @@ class SensorData {
 		strtok(tmp, ":");
 		 int module = std::stoi(strtok(NULL, ":"));
 		delete tmp;
+		
+		if (module < MODULE1 || module > MODULE3) {
+			ROS_WARN("Invalid module id %d", module);
+			return;
+		}
 		
 		int status = std::stoi(msg.value);
 		 if(status > MODULE_OK || status < MODULE_FULL) return; // Wrong types
