@@ -60,12 +60,12 @@ class SensorData {
 	static void moduleCallback(const diagnostic_msgs::KeyValue& msg) {
 		char* tmp = strdup(msg.key.c_str());
 		strtok(tmp, ":");
-		 int module = std::stoi(strtok(NULL, ":"));	
+		 int module = std::stoi(strtok(NULL, ":"));
 		delete tmp;
 		
 		int status = std::stoi(msg.value);
-		 if(status > 1) return; // Wrong types
-		mStat[module - 1] = status;
+		 if(status > MODULE_OK || status < MODULE_FULL) return; // Wrong types
+		mStat[module] = status;
 	}
 	
 	/* Returns true if the selected ultrasonic sensor is free.
