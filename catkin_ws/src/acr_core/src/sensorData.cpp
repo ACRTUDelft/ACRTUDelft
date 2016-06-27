@@ -12,18 +12,23 @@ float SensorData::batteryCharge = 0.f;
 
 float SensorData::angleOfInterest = NAN;
 
-float SensorData::uDist[4] = {0.f, 0.f, 0.f, 0.f};
+float SensorData::uDist[4] = {0, 0, 0, 0};
 float SensorData::mStat[3] = {MODULE_OK, MODULE_OK, MODULE_OK};
 	
-float SensorData::isFree(int sensor) {
-	switch(sensor) {
-		case U_LEFT: 			return uDist[U_LEFT];
-		case U_FRONT_TOP: 		return uDist[U_FRONT_TOP];
-		case U_FRONT_BOTTOM:	return uDist[U_FRONT_BOTTOM];
-		case U_RIGHT: 			return uDist[U_RIGHT];
+bool SensorData::isFree(int sensor) {
+	if(sensor > 3) {
+		ROS_WARN("Undefined sensor %d!", sensor);
+		return false;
 	}
-	ROS_WARN("Undefined sensor %d!", sensor);
-	return 0;
+	return uDist[sensor] > 0;
+}
+
+float SensorData::getDistance(int sensor) {
+	if(sensor > 3) {
+		ROS_WARN("Undefined sensor %d!", sensor);
+		return 0;
+	}
+	return uDist[sensor];
 }
 
 bool SensorData::isBatteryFull() {
@@ -44,7 +49,7 @@ float SensorData::pointOfInterest() {
 
 void SensorData::sendModule(int module, int moduleState) {
 	diagnostic_msgs::KeyValue msg = diagnostic_msgs::KeyValue();
-	 msg.key = "module:" + module;
+	 msg.key = "module:" + std::to_string(module);
 	 msg.value = std::to_string(moduleState);
 	module_pub.publish(msg);
 }
@@ -57,11 +62,6 @@ void SensorData::sendTwist(float angular, float linear) {
 }
 
 void SensorData::init(NodeHandle nh) {
-	nh.subscribe("sensor_ultrasonic", 	10, ultrasonicCallback);
-	nh.subscribe("sensor_camera", 		10, angleofInterestCallback);
-	nh.subscribe("sensor_battery", 		10, batteryCallback);
-	nh.subscribe("sensor_module", 		10, moduleCallback);
-	
 	twist_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 5);
 	module_pub = nh.advertise<diagnostic_msgs::KeyValue>("sensor_module", 5);
 }
