@@ -5,14 +5,7 @@
 State_Idle::State_Idle() { }
 
 State* State_Idle::update() {
-	//if(!isnan(SensorData::pointOfInterest())) {
-		return new State_Navigating();
-	/**}
-	if(rand() % 100 < 10) {
-		return new State_Roaming);
-	} else {
-		return this;
-	} **/
+	return new State_Navigating();
 }
 
 void State_Idle::switchTo() {
