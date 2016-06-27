@@ -12,12 +12,15 @@
 #include "consts.hpp"
 
 #define MODULES 3
+#define PORT 6000
 
 using namespace ros;
 using namespace std;
 
+/**
+ * Split the input string to an array using a delimiter.
+ */
 vector<string> split(const string& str, const char& ch) {
-	ROS_INFO("%s", str.c_str());
 	string next;
 	vector<string> result;
 
@@ -34,14 +37,14 @@ vector<string> split(const string& str, const char& ch) {
 	if (!next.empty()) {
 		result.push_back(next);
 	}
-	for (size_t i = 0; i < result.size(); i++) {
-        ROS_INFO("%s", result[i].c_str());
-    }
 	return result;
 }
 
+/**
+ * Parse the received data and publish the messages.
+ */
 void parseMessage(char buffer[], Publisher twist_pub, Publisher module_pub) {
-	std::vector<string> data = split (buffer, '\n');						
+	std::vector<string> data = split(buffer, '\n');						
 					
 	/* Create twist message */
 	geometry_msgs::Twist tmsg;
@@ -69,11 +72,10 @@ int main(int argc, char **argv) {
 	Publisher twist_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 5);
 	Publisher module_pub = nh.advertise<diagnostic_msgs::KeyValue>("sensor_module", 5);
 	
-	int sockfd, newsockfd, portno;
+	int sockfd, newsockfd;
 	unsigned int clilen;
     char buffer[256];
     struct sockaddr_in serv_addr, cli_addr;
-    int  n;
    
 	/* setup socket */
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -85,11 +87,10 @@ int main(int argc, char **argv) {
 
 	/* Initialize socket structure */
 	bzero((char *) &serv_addr, sizeof(serv_addr));	//clear the server address
-	portno = 6000;
 
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
-	serv_addr.sin_port = htons(portno);
+	serv_addr.sin_port = htons(PORT);
 
 	/* Bind the host address */
 	if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
@@ -102,11 +103,10 @@ int main(int argc, char **argv) {
 		
 	ROS_INFO("Waiting for connection..");
 
-	while (ok()) {   
-		
-	struct timeval tv;	// Timeout length
-	tv.tv_sec = 5;
-    tv.tv_usec = 0;	
+	while (ok()) {		
+		struct timeval tv;	// Timeout length
+		tv.tv_sec = 1;
+		tv.tv_usec = 0;	
     		
 		fd_set rfds;
 		FD_ZERO(&rfds);
@@ -114,29 +114,28 @@ int main(int argc, char **argv) {
     
 		int retval = select(FD_SETSIZE, &rfds, NULL, NULL, &tv);
 	    if (retval == -1) {
-			ROS_WARN("select()");
-			continue;
-		} else if (retval == 0) {	// Timeout
+			ROS_WARN("Connection closed");
+			return 1;
+		} else if (retval == 0) {	// timeout
 			continue;
 		}
 		newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
 	
 		if (newsockfd < 0) {
-		  ROS_WARN("ERROR on accept");
-		  exit(1);
+			ROS_WARN("ERROR on accept");
+			exit(1);
 		}
 		
 		ROS_INFO("Socket connected");
 		while(ok()) {
 			try {
 				bzero(buffer,256);
-				n = read( newsockfd,buffer,255 );
+				int n = read( newsockfd,buffer,255 );
 
 				if (n < 0) {
 				  ROS_WARN("ERROR reading from socket");
 				  break;
-				}
-				if (n > 0) {
+				} else if (n > 0) {
 					parseMessage(buffer, twist_pub, module_pub);
 					spinOnce();
 				} else {
