@@ -55,7 +55,7 @@ void parseMessage(char buffer[], Publisher twist_pub, Publisher module_pub) {
 	/* Create module messages */
 	for(int i = 2; i < 5; i++) {
 		diagnostic_msgs::KeyValue msg;
-		msg.key = "module:" + std::to_string(i);
+		msg.key = "module:" + std::to_string(i - 2);
 		if(data[i].compare("true") == 0) {
 			msg.value = std::to_string(MODULE_INTERACT); 
 		} else {
