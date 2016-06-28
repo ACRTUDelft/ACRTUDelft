@@ -1,0 +1,5 @@
+<!-- Launch the turtle and the turtleBridge -->
+<launch>
+	<node name="turtleBridge" pkg="acr_debug" type="turtleBridge"/>
+	<node name="turtle" pkg="turtlesim" type="turtlesim_node"/>
+</launch>
