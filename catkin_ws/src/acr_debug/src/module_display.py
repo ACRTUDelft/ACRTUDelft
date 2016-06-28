@@ -45,7 +45,7 @@ def moduleCallback(kval):
 	display()
 	
 if __name__=="__main__":
-	rospy.init_node("acr_module_display")
+	rospy.init_node("module_display")
 	rospy.Subscriber("sensor_module",KeyValue, moduleCallback)
 	
 	display()
