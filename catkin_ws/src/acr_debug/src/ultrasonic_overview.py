@@ -15,7 +15,7 @@ CTRL-C to quit
 
 sensors = [float('NaN'), float('NaN'), float('NaN'), float('NaN')]
 
-# Display the module states.
+# Display the ranges measured.
 def display():
 	os.system('clear')
 	print(header)
@@ -25,7 +25,7 @@ def display():
 	print("U_RIGHT:\t" + str(sensors[3]))
 
 # Callback for when a message is recieved.
-# Gets the module name and sets its values.
+# Checks if the sensor is valid and stores the range.
 def moduleCallback(msg):
 	sensor = msg.radiation_type
 	if (sensor > 3) or (sensor < 0):

@@ -16,7 +16,7 @@ CTRL-C to quit
 def display(charge):
 	os.system('clear')
 	print(header)
-	print("Battery charge: " + str(charge) + "%")
+	print("Battery charge: " + str(100 * charge) + "%")
 
 # Callback for when a message is recieved.
 # Gets the module name and sets its values.
