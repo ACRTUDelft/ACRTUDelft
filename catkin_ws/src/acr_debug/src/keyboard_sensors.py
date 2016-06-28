@@ -8,7 +8,7 @@ from diagnostic_msgs.msg import KeyValue
 import sys, select, termios, tty, math
 import numpy as np
 
-msg = """
+header = """
 Reading from the keyboard and Publishing to acr messages!
 ---------------------------
 Point of interest:
@@ -76,6 +76,26 @@ sensor_modules={
 		'l':(2, 0),
 	      	}
 
+# Send Float32 messages
+def sendFloat32(pub, fl):	
+	msg = Float32()
+	msg.data = fl
+	pub.publish(msg)
+
+# Send keyValue messages
+def sendKeyVal(pub, key, val):	
+	kval = KeyValue()
+	kval.key = key
+	kval.value = val
+	pub.publish(kval)
+
+# Send Range messages
+def sendRange(pub, radiation_type, r):
+	msg = Range()
+	msg.radiation_type = radiation_type
+	msg.range = r
+	pub.publish(msg)
+
 # get the pressed key from the console
 def getKey():
 	tty.setraw(sys.stdin.fileno())
@@ -95,13 +115,11 @@ if __name__=="__main__":
 	rospy.init_node('acr_keyboard')
 
 	try:
-		print msg
-		poi = float('nan')
+		print header
 
 		ult_max = 10000
 		ult_dist = 1999
 		ult = [ult_max, ult_max, ult_max, ult_max]
-		mod = [1, 1, 1]
 		bat_lvl = 1.0
 		while(1):
 			key = getKey()
@@ -110,7 +128,8 @@ if __name__=="__main__":
 
 			# Point of Interest
 			if key in poiBindings.keys():
-				poi = poiBindings[key]
+				sendFloat32(pub_poi, poiBindings[key])
+				continue
 			
 			# Ultrasonic distance
 			if key in distModifiers.keys():
@@ -118,57 +137,41 @@ if __name__=="__main__":
 				ult_dist = min(ult_dist, ult_max)
 				sys.stdout.write("\033[K")
 				print("\rRange: " + str(ult_dist))
+				continue
 
 			# Battery levels
 			if key in batModifiers.keys():
 				bat_lvl *= batModifiers[key]
 				bat_lvl = min(bat_lvl, 1)
 				sys.stdout.write("\033[K")
-				print("\rBattery: " + str(100 * bat_lvl) + "%")
+				print("\rBattery: " + str(100 * bat_lvl) + "%")				
+				sendFloat32(pub_bat, bat_lvl)
+				continue
 
 			# Ultrasonic trigger
-			ult = [ult_max, ult_max, ult_max, ult_max]
 			if key in sensor_ultrasonic.keys():
-				ult[sensor_ultrasonic[key]] = ult_dist
+				sensor = sensor_ultrasonic[key]
+				if (ult[sensor] == ult_dist):
+					ult[sensor] = ult_max
+				else :
+					ult[sensor] = ult_dist
+				sendRange(pub_ult, sensor, ult[sensor])
+				continue					
 				
 			# Module service
 			if key in sensor_modules.keys():
 				op = sensor_modules[key]
-				mod[op[0]] = op[1]
-			
-			# Send module messages	
-			for i, d in enumerate(mod):
-				kval = KeyValue()
-				kval.key = "module:" + str(i)
-				kval.value = str(mod[i])
-				pub_mod.publish(kval)
-
-			# Send ultrasonic distance messages	
-			for i, d in enumerate(ult):
-				ultRange = Range()
-				ultRange.radiation_type = i
-				ultRange.range = ult[i]
-				pub_ult.publish(ultRange)
-
-			# Send battery levels	
-			batFloat = Float32()
-			batFloat.data = bat_lvl
-			pub_bat.publish(batFloat)	
-			
-			
-			# Send Point of Interest	
-			poiFloat = Float32()
-			poiFloat.data = poi
-			pub_poi.publish(poiFloat)
+				sendKeyVal(pub_mod, "module:" + str(op[0]), str(op[1]))
+				continue
 
 	except Exception, e:
 		print e 
 
 	finally:
-		poiFloat = Float32()
-		poiFloat.data = float('nan')
-		pub_poi.publish(poiFloat)
-
+		sendFloat32(pub_poi, float('NaN'))
+		sendFloat32(pub_bat, 1.0)
+		for i in range(0, 3):
+			sendRange(pub_ult, i, ult_max)
+		for i in range(0, 2):
+			sendKeyVal(pub_mod, "module:" + str(i), '1')
     		termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
-
-
