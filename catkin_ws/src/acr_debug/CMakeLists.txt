@@ -39,7 +39,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(turtleBridge src/turtleBridge.cpp)
+add_executable(turtleBridge src/turtleBridge/turtleBridge.cpp)
 target_link_libraries(turtleBridge ${catkin_LIBRARIES})
 
 #############
