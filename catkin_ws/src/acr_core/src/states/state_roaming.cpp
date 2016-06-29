@@ -7,6 +7,9 @@
 State_Roaming::State_Roaming() { }
 
 State* State_Roaming::update() {
+	if(State_Navigating::backToIdle()) {
+		return new State_Idle();
+	}
 	if(!isnan(SensorData::pointOfInterest())) {
 		return new State_Approaching();
 	}
@@ -20,6 +23,7 @@ State* State_Roaming::update() {
 
 void State_Roaming::switchTo() { 
 		ROS_INFO("Switched to State_Roaming");
+		ROS_INFO("Superbehaviour: State_Navigating");
 }
 
 void State_Roaming::switchFrom() {

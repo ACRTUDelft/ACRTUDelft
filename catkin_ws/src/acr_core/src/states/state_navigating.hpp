@@ -13,6 +13,8 @@ class State_Idle;
  */
 class State_Navigating : public State {	
 
+	public:
+		bool backToIdle() {return false;};
 	
 };
 
