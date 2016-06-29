@@ -124,11 +124,14 @@ public class WifiConnection {
         return socket != null && socket.isConnected();
     }
 
-    public void send(float linear, float angular) throws IllegalArgumentException{
+    public void send(float linear, float angular, boolean[] mods) throws IllegalArgumentException{
         try {
             PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), false);
             out.println(linear);
             out.println(angular);
+            for (int i = 0; i < mods.length; i++) {
+                out.println(mods[i]);
+            }
             out.flush();
 
         } catch (Exception e) {

@@ -42,6 +42,9 @@ include_directories(
 add_executable(turtleBridge src/turtleBridge/turtleBridge.cpp)
 target_link_libraries(turtleBridge ${catkin_LIBRARIES})
 
+add_executable(WiFiControls src/WiFiControls/WiFiControls.cpp)
+target_link_libraries(WiFiControls ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
