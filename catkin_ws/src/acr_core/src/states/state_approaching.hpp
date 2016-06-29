@@ -3,7 +3,8 @@
 
 #include "state_navigating.hpp"
 
-/* State approaching is the state that entered when the robot sees a person while navigating
+/* This state is part of the Navigating superbehaviour
+ * State approaching is the state that entered when the robot sees a person while navigating
  * When the person is in front of you, start interacting with it
  */
 class State_Approaching : public State_Navigating {	

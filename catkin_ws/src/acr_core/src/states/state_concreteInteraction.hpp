@@ -9,8 +9,8 @@ class State_Idle;
 
 #include "state_interact.hpp"
 
-/* State interact is the state where the robot has interaction with a person/
- * When the person is gone, it will return to the idle state.
+/* This state is part of the Interact superbehaviour
+ * This state implements a placeholder routine for how the robot interacts
  */ 
 class State_ConcreteInteraction : public State_Interact {	
   public:	

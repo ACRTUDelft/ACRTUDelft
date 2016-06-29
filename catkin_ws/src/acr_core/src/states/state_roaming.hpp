@@ -13,6 +13,7 @@ class State_Roaming;
 
 
 /* 
+ * This state is part of the Navigating superbehaviour
  * The roaming state is the state where the robot looks around in an attempt to find a person.
  * The robot looks around for a random amount of time before it returns to the idle state.
  */
