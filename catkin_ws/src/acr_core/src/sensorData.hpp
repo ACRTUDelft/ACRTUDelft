@@ -11,7 +11,7 @@
 
 #include <string>
 
-#define ULTRASONIC_MIN_DIST 2000
+#define ULTRASONIC_MIN_DIST 50
 
 using namespace ros;
 
