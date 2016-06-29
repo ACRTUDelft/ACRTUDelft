@@ -5,7 +5,7 @@ from std_msgs.msg import Float32
 from sensor_msgs.msg import Range
 from diagnostic_msgs.msg import KeyValue
 
-import sys, select, termios, tty, math
+import sys, select, termios, tty, math, os
 import numpy as np
 
 header = """
@@ -51,13 +51,13 @@ poiBindings = {
 	       	}
 
 distModifiers = {
-		'r':(1.1),
-		'f':(0.9),
+		'r':(25),
+		'f':(-25),
 		}
 
 batModifiers = {
-		't':(1.1),
-		'g':(0.9),
+		't':(.05),
+		'g':(-.05),
 		}
 
 sensor_ultrasonic = {
@@ -75,6 +75,15 @@ sensor_modules={
 		'k':(1, 0),
 		'l':(2, 0),
 	      	}
+
+# Display the header, the battery level and the range
+def printAll(ult_range, bat_lvl):
+	os.system('clear')
+	for _ in range(1, 10):
+		print
+	print(header)
+	print("\rBattery: " + str(100 * bat_lvl) + "%")
+	print("\rRange: " + str(ult_range) + " cm")
 
 # Send Float32 messages
 def sendFloat32(pub, fl):	
@@ -115,12 +124,11 @@ if __name__=="__main__":
 	rospy.init_node('acr_keyboard')
 
 	try:
-		print header
-
-		ult_max = 10000
-		ult_dist = 1999
+		ult_max = 500
+		ult_dist = 100
 		ult = [ult_max, ult_max, ult_max, ult_max]
 		bat_lvl = 1.0
+		printAll(ult_dist, bat_lvl)
 		while(1):
 			key = getKey()
 			if (key == '\x03'):
@@ -133,18 +141,16 @@ if __name__=="__main__":
 			
 			# Ultrasonic distance
 			if key in distModifiers.keys():
-				ult_dist *= distModifiers[key]
-				ult_dist = min(ult_dist, ult_max)
-				sys.stdout.write("\033[K")
-				print("\rRange: " + str(ult_dist))
+				ult_dist += distModifiers[key]
+				ult_dist = max(0, min(ult_dist, ult_max))
+				printAll(ult_dist, bat_lvl)
 				continue
 
 			# Battery levels
 			if key in batModifiers.keys():
-				bat_lvl *= batModifiers[key]
-				bat_lvl = min(bat_lvl, 1)
-				sys.stdout.write("\033[K")
-				print("\rBattery: " + str(100 * bat_lvl) + "%")				
+				bat_lvl += batModifiers[key]
+				bat_lvl = max(0, min(bat_lvl, 1))
+				printAll(ult_dist, bat_lvl)			
 				sendFloat32(pub_bat, bat_lvl)
 				continue
 
