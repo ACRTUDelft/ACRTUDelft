@@ -3,6 +3,9 @@
 State_ConcreteInteraction::State_ConcreteInteraction() { }
 
 State* State_ConcreteInteraction::update() {
+	if(State_Interact::backToIdle()) {
+		return new State_Idle();
+	}
 	bool interact = false;
 	for (int i = 0; i < 3; i++) {
 		if(SensorData::isFree(i)) {
