@@ -1,11 +1,11 @@
 #include "state_idle.hpp" 
-#include "state_navigating.cpp"
+#include "state_roaming.cpp"
 #include <math.h>
 
 State_Idle::State_Idle() { }
 
 State* State_Idle::update() {
-	return new State_Navigating();
+	return new State_Roaming();
 }
 
 void State_Idle::switchTo() {

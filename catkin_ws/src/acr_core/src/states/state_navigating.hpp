@@ -13,7 +13,7 @@ class State_Idle;
  */
 class State_Navigating : public State {	
   public:	
-	State_Navigating();
+	State_Navigating() {};
 	
 	State* update() override;
     

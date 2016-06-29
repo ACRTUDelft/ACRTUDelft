@@ -2,6 +2,7 @@
 #define State_Roaming_H
 
 #include "../sensorData.hpp"
+#include "state_navigating.hpp"
 
 class State_Idle;
 class State_Approaching;
@@ -9,6 +10,7 @@ class State_Roaming;
 
 #include "../consts.hpp"
 #include "ros/ros.h"
+
 
 /* 
  * The roaming state is the state where the robot looks around in an attempt to find a person.
