@@ -12,14 +12,8 @@ class State_Idle;
  * When an object is in front of the robot it returns to the idle state or goes to the interact state.
  */
 class State_Navigating : public State {	
-  public:	
-	State_Navigating() {};
+
 	
-	State* update() override;
-    
-    void switchTo() override;
-    
-    void switchFrom() override;
 };
 
 #endif

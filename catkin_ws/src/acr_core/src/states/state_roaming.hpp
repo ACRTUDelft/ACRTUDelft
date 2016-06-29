@@ -16,7 +16,7 @@ class State_Roaming;
  * The roaming state is the state where the robot looks around in an attempt to find a person.
  * The robot looks around for a random amount of time before it returns to the idle state.
  */
-class State_Roaming : public State {	
+class State_Roaming : public State_Navigating {	
   public:	
 	State_Roaming();
 	
