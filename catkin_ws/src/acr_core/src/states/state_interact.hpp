@@ -6,18 +6,18 @@ class State_Idle;
 
 #include "ros/ros.h"
 
-/* State interact is the state where the robot has interaction with a person/
- * When the person is gone, it will return to the idle state.
+/* Abstract superclass for Interact behaviour.
+ * This is useful you want certain condition to hold for all States 
+ * within the Interact superbehaviour
+ * For example: when you want all subbehaviours to return to the Idle state
+ * under given conditions
  */ 
 class State_Interact : public State {	
-  public:	
-	State_Interact();
-	
-	State* update() override;
-    
-    void switchTo() override;
-    
-    void switchFrom() override;
-};
 
+	/* Condition under which to go back to the Idle state
+	 */
+	public:
+		bool backToIdle() {return false;};
+	
+};
 #endif

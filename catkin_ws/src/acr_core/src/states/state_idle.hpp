@@ -2,7 +2,6 @@
 #define State_Idle_H
 
 class State_Navigating;
-class State_LookAround;
 
 #include "../sensorData.hpp"
 #include "ros/ros.h"
