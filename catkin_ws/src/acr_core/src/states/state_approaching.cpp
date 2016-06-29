@@ -23,6 +23,7 @@ State* State_Approaching::update() {
 
 void State_Approaching::switchTo() {
 	ROS_INFO("Switched to State_Approaching"); 
+	ROS_INFO("Superbehaviour: State_Navigating"); 
 }
 
 void State_Approaching::switchFrom() { }
