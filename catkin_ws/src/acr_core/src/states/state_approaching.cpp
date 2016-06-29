@@ -1,6 +1,6 @@
 #include "state_approaching.hpp"
 
-#include "state_interact.cpp"
+#include "state_concreteInteraction.cpp"
 
 #define MOVE_SPEED 1
 
@@ -9,7 +9,7 @@ State_Approaching::State_Approaching() { }
 State* State_Approaching::update() {
 	if(!isnan(SensorData::pointOfInterest())) {
 			if(!SensorData::isFree(U_FRONT_TOP)) {
-			return new State_Interact();
+			return new State_ConcreteInteraction();
 		}
 		float angle = SensorData::pointOfInterest();
 		

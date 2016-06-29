@@ -1,4 +1,4 @@
-#include "state_interact.hpp"
+#include "state_concreteInteraction.hpp"
 
 State_ConcreteInteraction::State_ConcreteInteraction() { }
 
@@ -20,7 +20,8 @@ State* State_ConcreteInteraction::update() {
 }
 
 void State_ConcreteInteraction::switchTo() { 
-		ROS_INFO("Switched to State_Interact");
+		ROS_INFO("Switched to State_ConcreteInteraction");
+		ROS_INFO("Superbehaviour: State_Interact");
 }
 
 void State_ConcreteInteraction::switchFrom() {
