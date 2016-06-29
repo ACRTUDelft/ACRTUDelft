@@ -31,4 +31,6 @@ void State_ConcreteInteraction::switchFrom() {
 	SensorData::sendModule(MODULE1, MODULE_IDLE);
 	SensorData::sendModule(MODULE2, MODULE_IDLE);
 	SensorData::sendModule(MODULE3, MODULE_IDLE);
+	SensorData::sendTwist(0.f, 0.f); // stop turning!
+
 }

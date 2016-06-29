@@ -29,4 +29,6 @@ void State_Approaching::switchTo() {
 	ROS_INFO("Superbehaviour: State_Navigating"); 
 }
 
-void State_Approaching::switchFrom() { }
+void State_Roaming::switchFrom() {
+	SensorData::sendTwist(0.f, 0.f); // stop turning!
+}
