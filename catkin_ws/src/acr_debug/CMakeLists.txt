@@ -39,6 +39,9 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+add_executable(WiFiControls src/WiFiControls.cpp)
+target_link_libraries(WiFiControls ${catkin_LIBRARIES})
+
 add_executable(turtleBridge src/turtleBridge.cpp)
 target_link_libraries(turtleBridge ${catkin_LIBRARIES})
 
