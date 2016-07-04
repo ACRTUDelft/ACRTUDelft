@@ -7,19 +7,20 @@ class State_Idle;
 #include "../consts.hpp"
 #include "ros/ros.h"
 
-/* 
- * The navigating state is the state where the navigates towards a point of interest.
- * When an object is in front of the robot it returns to the idle state or goes to the interact state.
- */
+
+/* Abstract superclass for Navigating behaviour.
+ * This is useful you want certain condition to hold for all States 
+ * within the Interact superbehaviour
+ * For example: when you want all subbehaviours to return to the Idle state
+ * under given conditions
+ */ 
 class State_Navigating : public State {	
-  public:	
-	State_Navigating();
+
+	/* Condition under which to go back to the Idle state
+	 */
+	public:
+		bool backToIdle() {return false;};
 	
-	State* update() override;
-    
-    void switchTo() override;
-    
-    void switchFrom() override;
 };
 
 #endif
