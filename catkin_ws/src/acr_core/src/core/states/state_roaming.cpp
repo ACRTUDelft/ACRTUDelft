@@ -16,7 +16,7 @@ State* State_Roaming::update() {
 	if(rand() % 100 < 5) {
 		return new State_Idle();
 	} else {
-		SensorData::sendTwist(1.f, 0.f);
+		SensorData::sendTwist(TURN_SPEED, 0.f);
 		return this;
 	}
 }

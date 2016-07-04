@@ -2,8 +2,6 @@
 
 #include "state_concreteInteraction.cpp"
 
-#define MOVE_SPEED 1
-
 State_Approaching::State_Approaching() { }
 
 State* State_Approaching::update() {
@@ -16,7 +14,7 @@ State* State_Approaching::update() {
 		}
 		float angle = SensorData::pointOfInterest();
 		
-		SensorData::sendTwist(-angle, MOVE_SPEED);
+		SensorData::sendTwist(-angle * TURN_SPEED, MOVE_SPEED);
 		return this;
 	}
 	else {

@@ -13,11 +13,13 @@ class State_Idle;
  * under given conditions
  */ 
 class State_Interact : public State {	
-
+ public:
+ 
 	/* Condition under which to go back to the Idle state
 	 */
-	public:
-		bool backToIdle() {return false;};
+	bool backToIdle() {
+		return false;
+	};
 	
 };
 #endif
