@@ -1,7 +1,7 @@
 #ifndef State_ConcreteInteraction_H
 #define State_ConcreteInteraction_H
 
-#include "../sensorData.hpp"
+#include "../../sensorData.hpp"
 class State_Idle;
 
 #include "ros/ros.h"

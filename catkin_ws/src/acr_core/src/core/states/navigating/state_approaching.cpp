@@ -1,6 +1,6 @@
 #include "state_approaching.hpp"
 
-#include "state_concreteInteraction.cpp"
+#include "../interacting/state_concreteInteraction.cpp"
 
 State_Approaching::State_Approaching() { }
 
