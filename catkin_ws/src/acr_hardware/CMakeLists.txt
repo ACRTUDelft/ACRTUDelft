@@ -40,6 +40,10 @@ add_executable(moduleControl src/moduleControl/main.cpp)
 target_link_libraries(moduleControl ${catkin_LIBRARIES})
 target_link_libraries(moduleControl wiringPi)
 
+add_executable(ultrasonicSensors src/ultrasonicSensors/ultrasonicSensors.cpp)
+target_link_libraries(ultrasonicSensors ${catkin_LIBRARIES})
+target_link_libraries(ultrasonicSensors wiringPi)
+
 #############
 ## Install ##
 #############
