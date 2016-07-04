@@ -1,13 +1,9 @@
 #include "ros/ros.h"
 #include "sensor_msgs/Range.h"
+#include "../consts.hpp"
 
 #include <wiringPi.h>
 #include <sys/time.h>
-
-#define SENSORS 4
-#define MIN_RANGE 0.02
-#define MAX_RANGE 4.0
-#define FIELD_OF_VIEW 0.523598776	// 30 degrees in radians
 
 #define TIMEOUT 100 				// timeout in ms
 
@@ -51,7 +47,7 @@ float getDistance(int sensor) {
  */
 void setupPins() {
 	wiringPiSetup();
-	for(int i = 0; i < SENSORS; i++) {
+	for(int i = 0; i < ULTRASONIC_SENSORS; i++) {
 		pinMode(ECHO[i], INPUT);
 		pinMode(TRIG[i], OUTPUT);
 		digitalWrite(TRIG[i], LOW);
@@ -63,11 +59,11 @@ int main(int argc, char **argv) {
 	init(argc, argv, "ultrasonicSensors");
 	NodeHandle nh;
 
-	Publisher pub = nh.advertise<sensor_msgs::Range>("sensor_ultrasonic", 2 * SENSORS);
+	Publisher pub = nh.advertise<sensor_msgs::Range>("sensor_ultrasonic", 2 * ULTRASONIC_SENSORS);
 	Rate loop_rate(10.f);	// 10 Hz
 	
 	while(ros::ok()) {
-		for(int i = 0; i < SENSORS; i++) {
+		for(int i = 0; i < ULTRASONIC_SENSORS; i++) {
 			float dist = getDistance(i);
 			if(dist == -1) {
 				ROS_DEBUG("Sensor %d timed out", i);
@@ -75,9 +71,9 @@ int main(int argc, char **argv) {
 			}
 			sensor_msgs::Range msg;
 			msg.radiation_type = sensor_msgs::Range::ULTRASOUND;
-			msg.min_range = MIN_RANGE;
-			msg.max_range = MAX_RANGE;
-			msg.field_of_view = FIELD_OF_VIEW;
+			msg.min_range = ULTRASONIC_MIN_RANGE;
+			msg.max_range = ULTRASONIC_MAX_RANGE;
+			msg.field_of_view = ULTRASONIC_FIELD_OF_VIEW;
 			msg.range = dist;
 			pub.publish(msg);
 		}

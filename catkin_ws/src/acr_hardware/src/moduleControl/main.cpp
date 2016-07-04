@@ -1,14 +1,9 @@
 #include "ros/ros.h"
 #include "diagnostic_msgs/KeyValue.h"
+#include "../consts.hpp"
 
 #include <wiringPi.h>
 
-#define MODULE_OK 1
-#define MODULE_FULL 0
-#define MODULE_IDLE 2
-#define MODULE_INTERACT 3
-
-#define MODULES 3
 const int SERVICE[] = {1, 2, 3};	// Service pins for the modules
 const int INTERAC[] = {5, 6, 7};	// Interact pins for the modules 
 
