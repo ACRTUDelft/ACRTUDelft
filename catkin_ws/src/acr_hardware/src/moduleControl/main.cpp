@@ -1,11 +1,12 @@
 #include "ros/ros.h"
 #include "diagnostic_msgs/KeyValue.h"
 #include "../consts.hpp"
+#include "../pins.hpp"
 
 #include <wiringPi.h>
 
-const int SERVICE[] = {1, 2, 3};	// Service pins for the modules
-const int INTERAC[] = {5, 6, 7};	// Interact pins for the modules 
+const int SERVICE[] = {MOD1_S, MOD2_S, MOD3_S};	// Service pins for the modules
+const int INTERAC[] = {MOD1_I, MOD2_I, MOD3_I};	// Interact pins for the modules 
 
 using namespace ros;
 

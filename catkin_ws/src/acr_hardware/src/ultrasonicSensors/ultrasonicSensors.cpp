@@ -1,14 +1,15 @@
 #include "ros/ros.h"
 #include "sensor_msgs/Range.h"
 #include "../consts.hpp"
+#include "../pins.hpp"
 
 #include <wiringPi.h>
 #include <sys/time.h>
 
 #define TIMEOUT 100 				// timeout in ms
 
-const int TRIG[] = {1, 2, 3, 4};	// Trigger pins for the sensors
-const int ECHO[] = {5, 6, 7, 8};	// Echo pins for the sensors
+const int TRIG[] = {ULTRA_TRIG, ULTRA_TRIG, ULTRA_TRIG, ULTRA_TRIG};	// Trigger pins for the sensors
+const int ECHO[] = {LU_ECHO, FTU_ECHO, FBU_ECHO, RU_ECHO};				// Echo pins for the sensors
 
 using namespace ros;
 
