@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
   <name>acr_debug</name>
-  <version>0.0.1</version>
-  <description>Package with nodes that are for debbugung the code.</description>
+  <version>0.1.0</version>
+  <description>Package with nodes that are for debbuging the code. This includes monitoring nodes for all sensor information, a node for controlling the turtle and a node for simulating senor input.</description>
 
   <maintainer email="acr.tudelft@gmail.com">ACR Team</maintainer>
 
