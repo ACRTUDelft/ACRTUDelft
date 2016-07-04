@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
   <name>acr_core</name>
-  <version>0.0.0</version>
-  <description>The acr_core package. Contains all nodes needed for the behaviour of the robot.</description>
+  <version>0.1.0</version>
+  <description>The acr_core package. Contains all nodes needed for the behaviour of the robot and processing of sensor data.</description>
 
   <maintainer email="acr.tudelft@gmail.com">ACR Team</maintainer>
 
