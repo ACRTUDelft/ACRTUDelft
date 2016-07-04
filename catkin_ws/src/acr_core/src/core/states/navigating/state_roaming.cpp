@@ -22,8 +22,8 @@ State* State_Roaming::update() {
 }
 
 void State_Roaming::switchTo() { 
-		ROS_INFO("Switched to State_Roaming");
-		ROS_INFO("Superbehaviour: State_Navigating");
+	ROS_INFO("Switched to State_Roaming");
+	ROS_INFO("Superbehaviour: State_Navigating");
 }
 
 void State_Roaming::switchFrom() {

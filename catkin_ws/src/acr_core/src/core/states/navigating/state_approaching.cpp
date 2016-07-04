@@ -16,8 +16,7 @@ State* State_Approaching::update() {
 		
 		SensorData::sendTwist(-angle * TURN_SPEED, MOVE_SPEED);
 		return this;
-	}
-	else {
+	} else {
 		return new State_Idle();
 	}
 }

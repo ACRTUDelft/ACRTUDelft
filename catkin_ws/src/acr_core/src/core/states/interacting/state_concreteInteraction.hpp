@@ -15,12 +15,12 @@ class State_Idle;
 class State_ConcreteInteraction : public State_Interact {	
   public:	
 	State_ConcreteInteraction();
-	
+
 	State* update() override;
-    
-    void switchTo() override;
-    
-    void switchFrom() override;
+
+	void switchTo() override;
+
+	void switchFrom() override;
 };
 
 #endif

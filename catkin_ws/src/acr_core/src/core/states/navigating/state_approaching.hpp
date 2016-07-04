@@ -10,11 +10,11 @@
 class State_Approaching : public State_Navigating {	
   public:  
 	State_Approaching();
-	
+
 	State* update() override;
-    
-    void switchTo() override;
-    
-    void switchFrom() override;
+
+	void switchTo() override;
+
+	void switchFrom() override;
 };
 #endif

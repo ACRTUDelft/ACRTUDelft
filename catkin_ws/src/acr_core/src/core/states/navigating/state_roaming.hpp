@@ -19,12 +19,12 @@ class State_Approaching;
 class State_Roaming : public State_Navigating {	
   public:	
 	State_Roaming();
-	
+
 	State* update() override;
-    
-    void switchTo() override;
-    
-    void switchFrom() override;
+
+	void switchTo() override;
+
+	void switchFrom() override;
 };
 
 #endif
