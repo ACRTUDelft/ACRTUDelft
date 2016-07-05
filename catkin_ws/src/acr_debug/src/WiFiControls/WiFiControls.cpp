@@ -9,7 +9,7 @@
 #include <string.h>
 #include <vector>
 
-#include "consts.hpp"
+#include "../consts.hpp"
 
 #define MODULES 3
 #define PORT 6000
