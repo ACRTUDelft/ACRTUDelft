@@ -1,7 +1,7 @@
 #ifndef State_ConcreteInteraction_H
 #define State_ConcreteInteraction_H
 
-#include "../sensorData.hpp"
+#include "../../sensorData.hpp"
 class State_Idle;
 
 #include "ros/ros.h"
@@ -15,12 +15,12 @@ class State_Idle;
 class State_ConcreteInteraction : public State_Interact {	
   public:	
 	State_ConcreteInteraction();
-	
+
 	State* update() override;
-    
-    void switchTo() override;
-    
-    void switchFrom() override;
+
+	void switchTo() override;
+
+	void switchFrom() override;
 };
 
 #endif

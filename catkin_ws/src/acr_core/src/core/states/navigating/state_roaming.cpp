@@ -16,14 +16,14 @@ State* State_Roaming::update() {
 	if(rand() % 100 < 5) {
 		return new State_Idle();
 	} else {
-		SensorData::sendTwist(1.f, 0.f);
+		SensorData::sendTwist(TURN_SPEED, 0.f);
 		return this;
 	}
 }
 
 void State_Roaming::switchTo() { 
-		ROS_INFO("Switched to State_Roaming");
-		ROS_INFO("Superbehaviour: State_Navigating");
+	ROS_INFO("Switched to State_Roaming");
+	ROS_INFO("Superbehaviour: State_Navigating");
 }
 
 void State_Roaming::switchFrom() {

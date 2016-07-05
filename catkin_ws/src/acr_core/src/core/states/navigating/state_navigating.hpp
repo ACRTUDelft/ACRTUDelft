@@ -1,10 +1,10 @@
 #ifndef State_Navigating_H
 #define State_Navigating_H
 
-#include "../sensorData.hpp"
+#include "../../sensorData.hpp"
 class State_Idle;
 
-#include "../consts.hpp"
+#include "../../../consts.hpp"
 #include "ros/ros.h"
 
 

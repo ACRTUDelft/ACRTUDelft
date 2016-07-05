@@ -33,7 +33,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(core src/core.cpp)
+add_executable(core src/core/main.cpp)
 target_link_libraries(core ${catkin_LIBRARIES})
 
 #############

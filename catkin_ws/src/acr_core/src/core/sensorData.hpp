@@ -1,7 +1,7 @@
 #ifndef SensorData_H
 #define SensorData_H
 
-#include "consts.hpp"
+#include "../consts.hpp"
 
 #include "ros/ros.h"
 #include "sensor_msgs/Range.h"
@@ -10,8 +10,6 @@
 #include "geometry_msgs/Twist.h"
 
 #include <string>
-
-#define ULTRASONIC_MIN_DIST 50
 
 using namespace ros;
 

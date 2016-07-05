@@ -1,7 +1,7 @@
 #ifndef State_Interact_H
 #define State_Interact_H
 
-#include "../sensorData.hpp"
+#include "../../sensorData.hpp"
 class State_Idle;
 
 #include "ros/ros.h"
@@ -13,11 +13,13 @@ class State_Idle;
  * under given conditions
  */ 
 class State_Interact : public State {	
-
+ public:
+ 
 	/* Condition under which to go back to the Idle state
 	 */
-	public:
-		bool backToIdle() {return false;};
+	bool backToIdle() {
+		return false;
+	};
 	
 };
 #endif
