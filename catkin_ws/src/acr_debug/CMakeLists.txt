@@ -29,7 +29,16 @@ catkin_python_setup()
 ## Build ##
 ###########
 
-catkin_install_python(PROGRAMS py
+catkin_install_python(PROGRAMS src/battery_display/battery_display.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+catkin_install_python(PROGRAMS src/keyboard_sensors/keyboard_sensors.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+catkin_install_python(PROGRAMS src/module_display/module_display.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+catkin_install_python(PROGRAMS src/ultrasonic_display/ultrasonic_display.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 ## Allow c++11
