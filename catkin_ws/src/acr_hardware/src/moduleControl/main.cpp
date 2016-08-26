@@ -14,7 +14,7 @@ using namespace ros;
  * Set all the pins to input/output and reset the outputs
  */
 void setupPins() {
-	wiringPiSetup();
+	wiringPiSetupGpio();
 	for(int i = 0; i < MODULES; i++) {
 		pinMode(SERVICE[i], INPUT);
 		pinMode(INTERAC[i], OUTPUT);
@@ -27,8 +27,10 @@ void setupPins() {
  * Writes to the pins if 'SENSOR_IDLE' or 'SENSOR_INTERACT' is received
  */
 void moduleCallback(const diagnostic_msgs::KeyValue& msg) {
+
 	char* tmp = strdup(msg.key.c_str());
-	 int module = std::stoi(strtok(tmp, ":"));	
+	 strtok(tmp, ":");
+	 int module = std::stoi(strtok(NULL,""));	
 	delete tmp;
 	
 	if(module > MODULES) {
@@ -51,7 +53,8 @@ int main(int argc, char **argv) {
 	NodeHandle nh;
 
 	Publisher pub = nh.advertise<diagnostic_msgs::KeyValue>("sensor_module", 2 * MODULES);
-	nh.subscribe("sensor_module", 10, moduleCallback);
+	Subscriber sub = nh.subscribe("sensor_module", 10, moduleCallback);
+
 	Rate loop_rate(10.f);	// 10 Hz
 	
 	int c = 0;
@@ -59,7 +62,7 @@ int main(int argc, char **argv) {
 		if (c == 20) {		// .5 Hz for module state
 			for(int i = 0; i < MODULES; i++) {	// for each module
 				diagnostic_msgs::KeyValue msg = diagnostic_msgs::KeyValue();
-				msg.key = "module:" + i;
+				msg.key = "module:" + std::to_string(i);
 				if (digitalRead(SERVICE[i])) {
 					 msg.value = std::to_string(MODULE_FULL);
 				} else {
@@ -69,7 +72,7 @@ int main(int argc, char **argv) {
 			}
 			c = 0; // reset
 		}
-		spinOnce();		
+		spinOnce();	
 		loop_rate.sleep();
 		c++;
 	}			
