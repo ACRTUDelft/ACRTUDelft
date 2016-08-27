@@ -5,6 +5,7 @@ from std_msgs.msg import Float32
 
 import sys, select, termios, tty, os
 
+charge = -1;
 header = """
 Check the status of the battery
 -----------------------------------
@@ -13,7 +14,11 @@ CTRL-C to quit
 """
 
 # Display the battery state.
-def display(charge):
+def display(newCharge):
+	global charge
+	if (newCharge == charge):
+		return
+	charge = newCharge
 	os.system('clear')
 	print(header)
 	print("Battery charge: " + str(100 * charge) + "%")
