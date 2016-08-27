@@ -32,17 +32,20 @@ def moduleCallback(kval):
 	modName = "MODULE" + str(int(kval.key.split(":")[1]) + 1)
 	val = int(kval.value)
 	mod = modules[modName]
-	if (val == 0):
+	if (val == 0 and modules[modName][0] != "FULL"):
 		modules[modName] = ("FULL", mod[1])
-	elif (val == 1):
+		display()
+	elif (val == 1 and modules[modName][0] != "OK"):
 		modules[modName] = ("OK", mod[1])
-	elif (val == 2):
+		display()
+	elif (val == 2 and modules[modName][1] != "IDLE"):
 		modules[modName] = (mod[0], "IDLE")
-	elif (val == 3):
+		display()
+	elif (val == 3 and modules[modName][1] != "INTERACT"):
 		modules[modName] = (mod[0], "INTERACT")
-	else:
+		display()
+	elif (val > 3 or val < 0):
 		rospy.warn("Invalid module status: " + str(val))
-	display()
 	
 if __name__=="__main__":
 	rospy.init_node("module_display")
