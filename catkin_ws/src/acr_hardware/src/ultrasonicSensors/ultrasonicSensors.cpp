@@ -6,20 +6,20 @@
 #include <wiringPi.h>
 #include <sys/time.h>
 
-#define TIMEOUT 100 				// timeout in ms
+using namespace ros;
+
+#define TIMEOUT 1000 				// timeout in ms
 
 const int TRIG[] = {ULTRA_TRIG, ULTRA_TRIG, ULTRA_TRIG, ULTRA_TRIG};	// Trigger pins for the sensors
 const int ECHO[] = {LU_ECHO, FTU_ECHO, FBU_ECHO, RU_ECHO};				// Echo pins for the sensors
 
-using namespace ros;
+Publisher pub;
 
 /**
  * Check if a timeout happened from a given start time.
  */
-bool timeout(struct timeval start) {
-	struct timeval now;
-	gettimeofday(&now, NULL);
-	return (now.tv_usec - start.tv_usec) > TIMEOUT * 1000;
+bool timeout(long start) {
+	return (micros() - start) > TIMEOUT * 1000;
 }
 
 /**
@@ -29,30 +29,90 @@ bool timeout(struct timeval start) {
  */
 float getDistance(int sensor) {
 	digitalWrite(TRIG[sensor], LOW);
-	usleep(5);
+	usleep(1);	
 	digitalWrite(TRIG[sensor], HIGH);
-	usleep(10);
+	usleep(20);
 	digitalWrite(TRIG[sensor], LOW);
 	
-	struct timeval  start, end;
-	gettimeofday(&start, NULL);
-	 while(digitalRead(ECHO[sensor] == LOW) && !timeout(start))	// wait for response
-	gettimeofday(&end, NULL);
-	float time = (end.tv_usec - start.tv_usec) / 1000000 + (end.tv_sec - start.tv_sec);
-	if (time > TIMEOUT / 1000.f) return -1;
-	return time * 171.5; // convert to meters
+	long start = micros();
+	while(digitalRead(ECHO[sensor]) == LOW) {	// wait for the echo pulse to arrive
+		if (timeout(start)) return -1;
+	}
+	
+	start = micros();
+	while(digitalRead(ECHO[sensor]) == HIGH) {	// measure the echo duration
+		if (timeout(start)) return -1;
+	}
+	
+	long time = micros() - start;
+	
+	return time / 5800.0;	// convert to meters
+}
+
+/**
+ * Make multiple measurements and calculate the average.
+ * return -1, when any measurement fails, returns the average otherwise.
+ */
+float getAvgDistance(int sensor, int tries) {
+	float total = 0;
+	int timeout = 0;
+	
+	for (int i = 0; i < tries; i++)	{
+		float tmp = getDistance(sensor);
+		if (tmp == -1) {
+			return -1;
+		}
+		total += tmp;
+	}
+	
+	return total / tries;
 }
 
 /**
  * Set all the pins to input/output and reset the outputs
  */
 void setupPins() {
-	wiringPiSetup();
+	wiringPiSetupGpio();
 	for(int i = 0; i < ULTRASONIC_SENSORS; i++) {
 		pinMode(ECHO[i], INPUT);
 		pinMode(TRIG[i], OUTPUT);
 		digitalWrite(TRIG[i], LOW);
+		usleep(10000);
 	}
+	
+}
+
+/**
+ * Check if te range is between the boundries set by the hardware.
+ * Returns a corrected distance when it was limited by these boundries, or the old value otherwise.
+ */
+float correctRange(int sensor,float dist) {
+	if (dist == -1) {
+		ROS_DEBUG("Sensor %d timed out", sensor);
+		return ULTRASONIC_MAX_RANGE;
+	}
+	if (dist > ULTRASONIC_MAX_RANGE){
+		ROS_DEBUG("Sensor %d measured above maximum range", sensor);
+		return ULTRASONIC_MAX_RANGE;
+	}
+	if (dist < ULTRASONIC_MIN_RANGE){
+		ROS_DEBUG("Sensor %d measured below minimal range", sensor);
+		return ULTRASONIC_MIN_RANGE;
+	}
+	return dist;
+}
+
+/**
+ * Send the distance to the ros system.
+ */
+void sendMessage(int sensor, float dist) {
+	sensor_msgs::Range msg;
+	 msg.radiation_type = sensor;
+	 msg.min_range = ULTRASONIC_MIN_RANGE;
+	 msg.max_range = ULTRASONIC_MAX_RANGE;
+	 msg.field_of_view = ULTRASONIC_FIELD_OF_VIEW;
+	 msg.range = dist;
+	pub.publish(msg);
 }
 
 int main(int argc, char **argv) {
@@ -60,23 +120,14 @@ int main(int argc, char **argv) {
 	init(argc, argv, "ultrasonicSensors");
 	NodeHandle nh;
 
-	Publisher pub = nh.advertise<sensor_msgs::Range>("sensor_ultrasonic", 2 * ULTRASONIC_SENSORS);
+	pub = nh.advertise<sensor_msgs::Range>("sensor_ultrasonic", 2 * ULTRASONIC_SENSORS);
 	Rate loop_rate(10.f);	// 10 Hz
 	
-	while(ros::ok()) {
-		for(int i = 0; i < ULTRASONIC_SENSORS; i++) {
-			float dist = getDistance(i);
-			if(dist == -1) {
-				ROS_DEBUG("Sensor %d timed out", i);
-				continue;
-			}
-			sensor_msgs::Range msg;
-			msg.radiation_type = sensor_msgs::Range::ULTRASOUND;
-			msg.min_range = ULTRASONIC_MIN_RANGE;
-			msg.max_range = ULTRASONIC_MAX_RANGE;
-			msg.field_of_view = ULTRASONIC_FIELD_OF_VIEW;
-			msg.range = dist;
-			pub.publish(msg);
+	while (ros::ok()) {
+		for (int i = 0; i < ULTRASONIC_SENSORS; i++) {
+			float dist = getAvgDistance(i, 3);
+			 dist = correctRange(i, dist);
+			sendMessage(i, dist);
 		}
 		spinOnce();		
 		loop_rate.sleep();
