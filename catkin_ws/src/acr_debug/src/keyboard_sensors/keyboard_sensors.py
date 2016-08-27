@@ -102,7 +102,7 @@ def sendKeyVal(pub, key, val):
 def sendRange(pub, radiation_type, r):
 	msg = Range()
 	msg.radiation_type = radiation_type
-	msg.range = r
+	msg.range = r / 100 # convert to meters
 	pub.publish(msg)
 
 # get the pressed key from the console
