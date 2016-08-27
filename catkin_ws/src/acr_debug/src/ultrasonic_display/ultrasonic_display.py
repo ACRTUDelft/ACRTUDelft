@@ -28,10 +28,12 @@ def display():
 # Checks if the sensor is valid and stores the range.
 def moduleCallback(msg):
 	sensor = msg.radiation_type
-	if (sensor > 3) or (sensor < 0):
+	if (sensor > 3 or sensor < 0):
 		rospy.warn("Invalid sensor: " + str(val))
-	sensors[sensor] = msg.range
-	display()
+		return
+	if(sensors[sensor] != msg.range):
+		sensors[sensor] = msg.range
+		display()
 	
 if __name__=="__main__":
 	rospy.init_node("ultrasonic_display")
