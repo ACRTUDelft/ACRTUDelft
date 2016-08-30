@@ -9,8 +9,11 @@ using namespace ros;
 #define ENGINE_RIGHT ENGINE1
 
 /**
- * Callback for received messages on 'sensor_modules'
- * Writes to the pins if 'SENSOR_IDLE' or 'SENSOR_INTERACT' is received
+ * Callback for received messages on 'cmd_vel'
+ * Calculates the speeds for both engines and writes this to the corresponding pins.
+ * 
+ * This method is used for vehicles with a left and right engine.
+ * When the linear speed is 0, the turns become in place by reversing the other engine.
  */
 void normalCallback(const geometry_msgs::Twist& msg) {
 	if (msg.linear.x > 1 || msg.linear.x < -1) {
@@ -27,10 +30,10 @@ void normalCallback(const geometry_msgs::Twist& msg) {
 	int speed = (int) (msg.linear.x * 100);
 	int angular = (int) (msg.angular.z * 1.1111f);
 	
-	if (angular == 0) { 
+	if (angular == 0) { 		// straight
 		runEngine(ENGINE_LEFT, speed);
 		runEngine(ENGINE_RIGHT, speed);
-	} else if (angular > 0) { 
+	} else if (angular > 0) { 	// left
 		if (speed == 0) {
 			runEngine(ENGINE_RIGHT, angular);
 			runEngine(ENGINE_LEFT, -angular);
@@ -38,7 +41,7 @@ void normalCallback(const geometry_msgs::Twist& msg) {
 			runEngine(ENGINE_RIGHT, speed / (angular + 1));
 			runEngine(ENGINE_LEFT, speed);
 		}
-	} else {
+	} else {					// right
 		if (speed == 0) {
 			runEngine(ENGINE_LEFT, angular);
 			runEngine(ENGINE_RIGHT, -angular);

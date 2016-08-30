@@ -18,12 +18,17 @@ bool isEngineRunning[] = {false, false};
 
 using namespace ros;
 
+
+/**
+ * Check if any engine is running.
+ * Only returns false when all engines are off.
+ */
 bool isAnyEngineRunning() {
 	return isEngineRunning[ENGINE0] || isEngineRunning[ENGINE1];
 }
 
 /**
- * Set all the pins to input/output and reset the outputs
+ * Set all the engine pins to PWM.
  */
 void setupPins() {
 	wiringPiSetupGpio();
@@ -34,6 +39,9 @@ void setupPins() {
 	softPwmCreate(ENGINE_BACK[1], 0, 100);
 }
 
+/**
+ * Stop the given engine by setting forward and backward to 0.
+ */
 void stopEngine(int engine) {
 	if (engine > 1 || engine < 0) {
 		ROS_WARN("Invalid engine in 'stopEngine(%d)'", engine);
@@ -44,6 +52,10 @@ void stopEngine(int engine) {
 	isEngineRunning[engine] = false;
 }
 
+/**
+ * Run the specified engine with the given power.
+ * The power is on a scale between -100 and 100, where negative values indicate a reversed rotation.
+ */
 void runEngine(int engine, int power) {
 	if (engine > 1 || engine < 0) {
 		ROS_WARN("Invalid engine in 'runEngine(%d, %d)'", engine, power);

@@ -8,6 +8,12 @@ using namespace ros;
 #define ENGINE_LINEAR ENGINE0
 #define ENGINE_ANGULAR ENGINE1
 
+/**
+ * Callback for received messages on 'cmd_vel'
+ * Calculates the speeds for both engines and writes this to the corresponding pins.
+ * 
+ * This method is used for vehicles with a driving and steering engine.
+ */
 void tripodCallback(const geometry_msgs::Twist& msg) {
 	if (msg.linear.x > 1 || msg.linear.x < -1) {
 		ROS_WARN("Invalid linear.x, must be between -1 and 1 (now is %f)", msg.linear.x);
