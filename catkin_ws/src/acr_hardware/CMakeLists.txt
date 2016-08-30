@@ -36,15 +36,10 @@ include_directories(
 add_executable(flirLepton src/flirLepton/flirLepton.cpp)
 target_link_libraries(flirLepton ${catkin_LIBRARIES})
 
-add_executable(simpleEngineControl src/simpleEngineControl/main.cpp)
-target_link_libraries(simpleEngineControl ${catkin_LIBRARIES})
-target_link_libraries(simpleEngineControl wiringPi)
-target_link_libraries(simpleEngineControl pthread)
-
-add_executable(tripodEngineControl src/tripodEngineControl/main.cpp)
-target_link_libraries(tripodEngineControl ${catkin_LIBRARIES})
-target_link_libraries(tripodEngineControl wiringPi)
-target_link_libraries(tripodEngineControl pthread)
+add_executable(engineControl src/engineControl/main.cpp)
+target_link_libraries(engineControl ${catkin_LIBRARIES})
+target_link_libraries(engineControl wiringPi)
+target_link_libraries(engineControl pthread)
 
 add_executable(moduleControl src/moduleControl/main.cpp)
 target_link_libraries(moduleControl ${catkin_LIBRARIES})

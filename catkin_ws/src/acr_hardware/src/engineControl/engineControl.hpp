@@ -1,3 +1,6 @@
+#ifndef engineControl_H
+#define engineControl_H
+
 #include "ros/ros.h"
 #include "../pins.hpp"
 
@@ -9,6 +12,8 @@
 
 const int ENGINE_FORW[] = {ENGINE0_RORW, ENGINE1_FORW};
 const int ENGINE_BACK[] = {ENGINE0_BACK, ENGINE1_BACK};
+
+unsigned int lastMessage = millis();
 
 using namespace ros;
 
@@ -52,3 +57,4 @@ void runEngine(int engine, int power) {
 		softPwmWrite(ENGINE_FORW[engine], 0);
 	}
 }
+#endif
