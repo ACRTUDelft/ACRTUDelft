@@ -41,6 +41,11 @@ target_link_libraries(simpleEngineControl ${catkin_LIBRARIES})
 target_link_libraries(simpleEngineControl wiringPi)
 target_link_libraries(simpleEngineControl pthread)
 
+add_executable(tripodEngineControl src/tripodEngineControl/main.cpp)
+target_link_libraries(tripodEngineControl ${catkin_LIBRARIES})
+target_link_libraries(tripodEngineControl wiringPi)
+target_link_libraries(tripodEngineControl pthread)
+
 add_executable(moduleControl src/moduleControl/main.cpp)
 target_link_libraries(moduleControl ${catkin_LIBRARIES})
 target_link_libraries(moduleControl wiringPi)
