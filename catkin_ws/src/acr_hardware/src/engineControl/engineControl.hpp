@@ -14,8 +14,13 @@ const int ENGINE_FORW[] = {ENGINE0_RORW, ENGINE1_FORW};
 const int ENGINE_BACK[] = {ENGINE0_BACK, ENGINE1_BACK};
 
 unsigned int lastMessage = millis();
+bool isEngineRunning[] = {false, false};
 
 using namespace ros;
+
+bool isAnyEngineRunning() {
+	return isEngineRunning[ENGINE0] || isEngineRunning[ENGINE1];
+}
 
 /**
  * Set all the pins to input/output and reset the outputs
@@ -36,6 +41,7 @@ void stopEngine(int engine) {
 	}
 	softPwmWrite(ENGINE_FORW[engine], 0);
 	softPwmWrite(ENGINE_BACK[engine], 0);
+	isEngineRunning[engine] = false;
 }
 
 void runEngine(int engine, int power) {
@@ -56,5 +62,7 @@ void runEngine(int engine, int power) {
 		softPwmWrite(ENGINE_BACK[engine], -power);
 		softPwmWrite(ENGINE_FORW[engine], 0);
 	}
+	
+	isEngineRunning[engine] = true;
 }
 #endif
