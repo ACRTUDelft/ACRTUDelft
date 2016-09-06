@@ -33,7 +33,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(flirLepton src/flirLepton/flirLepton.cpp)
+add_executable(flirLepton src/flirLepton/main.cpp)
 target_link_libraries(flirLepton ${catkin_LIBRARIES})
 
 add_executable(moduleControl src/moduleControl/main.cpp)
