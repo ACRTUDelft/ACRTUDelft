@@ -40,6 +40,9 @@ Mat image = cv_ptr->image;
 
 // Setup SimpleBlobDetector parameters.
 SimpleBlobDetector::Params params;
+params.minThreshold = 1;
+params.maxArea = 2000;
+
  
 
   SimpleBlobDetector detector(params);
@@ -49,8 +52,8 @@ detector.detect( image, keypoints);
 float interest_x = 0;
 float interest_y = 0;
 
-
 for(vector<KeyPoint>::iterator blobIterator = keypoints.begin(); blobIterator != keypoints.end(); blobIterator++){
+ROS_INFO("%d", blobIterator->size);
 if(blobIterator->size>grootsteblob){
    grootsteblob=blobIterator->size;
  angle = (blobIterator->pt.x-IMG_WIDTH/2)/IMG_WIDTH*FOV;
