@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 	
 	/* Check running mode */
 	bool tripodMode = true;
-	if(argc == 2 && strcmp(argv[1], "--normal")) {
+	if(argc == 2 && strcmp(argv[1], "--normal") == 0) {
 		tripodMode = false;
 		ROS_INFO("engineControl started in NORMAL mode");
 	} else {
