@@ -27,7 +27,7 @@ using namespace ros;
 int fd;
 struct spi_ioc_transfer _tr;
 
-const char *device = "/dev/spidev0.1"; // Change to 0.0 if necessary!
+char device[] = "/dev/spidev0.1";
 unsigned char mode = 0, bits = 8;
 unsigned int speed = 16000000;
 unsigned short delay = 0;
@@ -38,6 +38,13 @@ std::vector<unsigned char> result(RowPacketBytes*FrameHeight);
 std::vector<unsigned short> rawData(FrameWords);
 std::vector<unsigned char> procData(FrameWords);
 Publisher pub;
+
+/**
+ * sets the device location
+ */
+void setDevice(char id) {
+	device[13] = id;
+}
 
 /**
  * Initializes the spi interface.

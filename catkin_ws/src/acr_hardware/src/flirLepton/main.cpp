@@ -139,7 +139,14 @@ void readCamera() {
 }
 
 int main( int argc, char **argv ) {
-	if(argc == 2 && strcmp(argv[1], "--scale") == 0) {
+	if(argc > 1) {
+		setDevice(argv[1][0]);
+	} else {
+		ROS_WARN("No device given, please specify the SPI interface port (probably 0 or 1).\n Shutting down..");
+		return -1;
+	}
+	
+	if(argc == 3 && strcmp(argv[2], "--scale") == 0) {
 		scale = true;
 		ROS_INFO("Color scaling enabled");
 	} else {
