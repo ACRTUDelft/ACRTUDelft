@@ -27,7 +27,7 @@ enum {
 int fd;
 struct spi_ioc_transfer _tr;
 
-const char *device = "/dev/spidev0.1"; // Change to 0.1 if necessary!
+const char *device = "/dev/spidev0.1"; // Change to 0.0 if necessary!
 unsigned char mode = 0, bits = 8;
 unsigned int speed = 16000000;
 unsigned short delay = 0;
@@ -35,6 +35,7 @@ unsigned short delay = 0;
 std::vector<unsigned char> tx(RowPacketBytes);
 std::vector<unsigned char> result(RowPacketBytes*FrameHeight);
 std::vector<unsigned short> rawData(FrameWords);
+std::vector<unsigned short> procData(FrameWords);
 
 bool initLepton() {
     fd = open(device, O_RDWR);
@@ -137,6 +138,19 @@ int main( int argc, char **argv ) {
                 *(out++) = value;
             }
         }
+        
+        /*##########*/
+        
+        int diff = maxValue - minValue + 1;
+		for (int y = 0; y < FrameHeight; ++y) {
+			for (int x = 0; x < FrameWidth; ++x) {
+				int baseValue = rawData[FrameWidth*y + x]; // take input value in [0, 65536)
+				uint8_t scaledValue = 256 * (baseValue - minValue)/diff; // map value to interval [0, 256), and set the pixel to its color value above
+				procData[FrameWidth*y + x] = scaledValue > 100 ? scaledValue : 0;
+				rawData[FrameWidth*y + x] = scaledValue;
+			}
+		}
+        /*##########*/
 
         //emit updateImage(&rawData[0], minValue, maxValue); // send image
 		sensor_msgs::Image imageMsg;
@@ -146,7 +160,7 @@ int main( int argc, char **argv ) {
 		imageMsg.is_bigendian = 0; // false
 		imageMsg.step = FrameWidth	;
 		std::vector<unsigned char> image;
-		for (unsigned short i : rawData) {
+		for (unsigned short i : procData) {
 			image.push_back((unsigned char) i);
 		}
 		imageMsg.data = image;

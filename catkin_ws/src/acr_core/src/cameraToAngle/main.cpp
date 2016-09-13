@@ -18,7 +18,7 @@ public:
   cameraToAngle()
   {
     //Topic you want to publish
-    pub_ = n_.advertise<std_msgs::Float32>("angleOfInterest", 1);
+    pub_ = n_.advertise<std_msgs::Float32>("sensor_camera", 1);
 
     //Topic you want to subscribe
     sub_ = n_.subscribe("IR_heatmap", 100, &cameraToAngle::callback, this);
@@ -27,7 +27,6 @@ public:
   void callback(const sensor_msgs::Image& input)
   {
     std_msgs::Float32 output;
-    float angle = 0;
 
 // Detect blobs.
 vector<KeyPoint> keypoints;
@@ -40,8 +39,12 @@ Mat image = cv_ptr->image;
 
 // Setup SimpleBlobDetector parameters.
 SimpleBlobDetector::Params params;
-params.minThreshold = 1;
-params.maxArea = 2000;
+params.maxArea = 20000;
+params.filterByCircularity = false;
+params.filterByConvexity = false;
+params.minArea = 256;
+params.filterByInertia = false;
+params.blobColor = 255;
 
  
 
@@ -51,14 +54,13 @@ detector.detect( image, keypoints);
  float grootsteblob = 0;
 float interest_x = 0;
 float interest_y = 0;
+    float angle = NAN;
 
 for(vector<KeyPoint>::iterator blobIterator = keypoints.begin(); blobIterator != keypoints.end(); blobIterator++){
-ROS_INFO("%d", blobIterator->size);
-if(blobIterator->size>grootsteblob){
-   grootsteblob=blobIterator->size;
- angle = (blobIterator->pt.x-IMG_WIDTH/2)/IMG_WIDTH*FOV;
-
-}
+	if(blobIterator->size>grootsteblob){
+		grootsteblob=blobIterator->size;
+		angle = (blobIterator->pt.x-IMG_WIDTH/2)/IMG_WIDTH*FOV;
+	}
 } 
 
 Mat im_with_keypoints;
