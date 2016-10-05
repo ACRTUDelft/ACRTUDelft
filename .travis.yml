@@ -86,6 +86,9 @@ before_install:
   - ./build
   - sudo pip install wiringpi2
 
+  # Install opencv
+  - sudo apt-get install libopencv-dev python-opencv
+
 # Create a catkin workspace with the package under integration.
 install:
   - mkdir -p ~/catkin_ws/src
