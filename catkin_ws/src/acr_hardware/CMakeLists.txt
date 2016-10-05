@@ -3,7 +3,6 @@ project(acr_hardware)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
-  message_generation
   geometry_msgs
   std_msgs
   roscpp
