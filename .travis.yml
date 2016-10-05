@@ -55,7 +55,7 @@ env:
   global:
     - ROS_DISTRO=indigo
     - ROS_CI_DESKTOP="`lsb_release -cs`"  # e.g. [precise|trusty|...]
-    - CI_SOURCE_PATH=$(pwd)
+    - CI_SOURCE_PATH=$(pwd)/catkin_ws
     - ROSINSTALL_FILE=$CI_SOURCE_PATH/dependencies.rosinstall
     - CATKIN_OPTIONS=$CI_SOURCE_PATH/catkin.options
     - ROS_PARALLEL_JOBS='-j8 -l6'
@@ -72,6 +72,18 @@ before_install:
   # Prepare rosdep to install dependencies.
   - sudo rosdep init
   - rosdep update
+  - sudo apt-get install ros-indigo-qt-ros
+
+  # Install curl
+  - sudo apt-get install libcurlpp-dev
+  # Install WiringPi
+  - mkdir ~/.wiringPi/
+  - cd ~/.wiringPi/
+  - git clone git://git.drogon.net/wiringPi
+  - cd wiringPi
+  - git pull origin
+  - ./build
+  - sudo pip install wiringpi2
 
 # Create a catkin workspace with the package under integration.
 install:
