@@ -90,7 +90,7 @@ before_install:
   - cd ~/
   - git clone https://github.com/jayrambhia/Install-OpenCV.git
   - cd Install-OpenCV/Ubuntu
-  - ./opencv_latest.sh >/dev/null
+  - ./opencv_latest.sh
 
 # Create a catkin workspace with the package under integration.
 install:
