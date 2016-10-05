@@ -76,6 +76,7 @@ before_install:
 
   # Install curl
   - sudo apt-get install libcurlpp-dev
+
   # Install WiringPi
   - mkdir ~/.wiringPi/
   - cd ~/.wiringPi/
