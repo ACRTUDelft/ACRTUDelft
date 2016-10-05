@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(OpenCV)
-find_package(OpenCV 2 REQUIRED)
+#find_package(OpenCV 2 REQUIRED)
 find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
