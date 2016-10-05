@@ -5,7 +5,6 @@ project(acr_core)
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   roscpp
-  rospy 
   std_msgs 
   message_generation
   sensor_msgs
@@ -14,7 +13,6 @@ find_package(catkin REQUIRED COMPONENTS
   qt_build
 )
 
-#find_package(OpenCV REQUIRED)
 find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
