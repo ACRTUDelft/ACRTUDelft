@@ -1,3 +1,4 @@
+![Travis build status] (https://api.travis-ci.org/ACRTUDelft/ACRTUDelft.svg?branch=master)
 # Autonomous Cleaning Robot | Tu Delft
 The aim of this interdisciplinary project on the TU Dleft is to design a robot which is able to collect waste from students at the campus. The project will run for multiple years, with each year a new group of students, until the robot is fully functional.
 
