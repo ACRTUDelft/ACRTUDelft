@@ -3,14 +3,14 @@ project(acr_core)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
-  geometry_msgs
-  roscpp
-  std_msgs 
-  message_generation
-  sensor_msgs
-  cv_bridge
-  image_transport
-  qt_build
+	geometry_msgs
+	roscpp
+	std_msgs 
+	message_generation
+	sensor_msgs
+	cv_bridge
+	image_transport
+	qt_build
 )
 
 find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui)
@@ -18,8 +18,8 @@ find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 include_directories(
-  ${catkin_INCLUDE_DIRS}
-  ${CMAKE_CURRENT_BINARY_DIR}
+	${catkin_INCLUDE_DIRS}
+	${CMAKE_CURRENT_BINARY_DIR}
 )
 
 include(${QT_USE_FILE})
@@ -50,12 +50,12 @@ catkin_package(
 ## Allow c++11
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
-add_executable(cameraToAngle src/cameraToAngle/main.cpp)
-  target_link_libraries(cameraToAngle ${catkin_LIBRARIES})
-  target_link_libraries(cameraToAngle ${OpenCV_LIBRARIES})
+add_executable(cameraToAngle src/cameraToAngle/node_cameraToAngle.cpp)
+	target_link_libraries(cameraToAngle ${catkin_LIBRARIES})
+	target_link_libraries(cameraToAngle ${OpenCV_LIBRARIES})
 
 add_executable(core src/core/main.cpp)
-  target_link_libraries(core ${catkin_LIBRARIES})
+	target_link_libraries(core ${catkin_LIBRARIES})
  
 
 #############
@@ -66,3 +66,11 @@ add_executable(core src/core/main.cpp)
 #############
 ## Testing ##
 #############
+
+
+catkin_add_gtest(cameraToAngle-test test/test_cameraToAngle.cpp)
+	target_link_libraries(cameraToAngle-test ${catkin_LIBRARIES})
+	target_link_libraries(cameraToAngle-test ${OpenCV_LIBRARIES})
+	configure_file(test/testLeft.png test/testLeft.png COPYONLY)
+	configure_file(test/testRight.png test/testRight.png COPYONLY)
+	configure_file(test/testEmpty.png test/testEmpty.png COPYONLY)

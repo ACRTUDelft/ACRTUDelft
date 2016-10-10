@@ -1,7 +1,6 @@
 #include <ros/ros.h> 
 #include "sensor_msgs/Image.h"
 #include "sensor_msgs/image_encodings.h"
-#include "std_msgs/Float32.h"
 
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/opencv.hpp>
@@ -11,13 +10,9 @@
 #define FOV 25
 #define PREVIEW_SCREEN "cameraToAngle | preview"
 
-using namespace ros;
 using namespace cv;
 using namespace std;
 
-
-Publisher pub;
-Subscriber sub;
 bool showPreview = false;
 SimpleBlobDetector detector;
 
@@ -32,20 +27,23 @@ void detectBlobs(const sensor_msgs::Image& input, Mat& image, vector<KeyPoint>& 
 	detector.detect(image, keypoints);
 }
 
+float calculateAngle(float x) {
+	return (x - IMG_WIDTH/2) / IMG_WIDTH * FOV;
+}
 /**
  * Get the biggest blob from a list of blobs and calculates its relative angle.
  * Returns NaN if no blob is found.
  */
 float getAngle(vector<KeyPoint>& keypoints) {
-	float grootsteblob = 0;
+	float biggestBlob = 0;
 	float interest_x = 0;
 	float interest_y = 0;
 	float angle = NAN;
 
 	for(vector<KeyPoint>::iterator blobIterator = keypoints.begin(); blobIterator != keypoints.end(); blobIterator++){
-		if(blobIterator->size>grootsteblob){
-			grootsteblob=blobIterator->size;
-			angle = (blobIterator->pt.x-IMG_WIDTH/2)/IMG_WIDTH*FOV;
+		if(blobIterator->size > biggestBlob){
+			biggestBlob = blobIterator->size;
+			angle = calculateAngle(blobIterator->pt.x);
 		}
 	}
 	return angle;
@@ -55,9 +53,7 @@ float getAngle(vector<KeyPoint>& keypoints) {
  * Callback method for receiving images to process.
  * Detects blobs in the received image, selects the best one and returns the relative angle with this blob.
  */
-void callback(const sensor_msgs::Image& input) {
-	std_msgs::Float32 output;
-
+float imageProcess(const sensor_msgs::Image& input) {
 	Mat image;
 	vector<KeyPoint> keypoints;	
 	detectBlobs(input, image, keypoints);
@@ -68,14 +64,15 @@ void callback(const sensor_msgs::Image& input) {
 		imshow(PREVIEW_SCREEN, im_with_keypoints );
 	}
 	
-	output.data = getAngle(keypoints);
-	pub.publish(output);
+	return getAngle(keypoints);
 }
 
 /**
  * Setup the blob detector and its parameters.
  */
-void setupDetector() {
+void initDetector(bool preview) {
+	showPreview = preview;
+	
 	SimpleBlobDetector::Params params;
 	 params.maxArea = 20000;
 	 params.filterByCircularity = false;
@@ -85,28 +82,16 @@ void setupDetector() {
 	 params.blobColor = 255;
 
 	detector = SimpleBlobDetector(params);
-}
-
-int main(int argc, char **argv) {
-	if(argc == 2 && strcmp(argv[1], "--preview") == 0) {
-		showPreview = true;
-		ROS_INFO("Preview window enabled");
-	} else {
-		ROS_INFO("Preview window disabled");
-	}
-		
-	init(argc, argv, "camera_to_angle");
-	NodeHandle nh;
-	
-	pub = nh.advertise<std_msgs::Float32>("sensor_camera", 1);
-	sub = nh.subscribe("IR_heatmap", 100, callback);
-	setupDetector();
 	
 	if (showPreview) {
 		cvNamedWindow(PREVIEW_SCREEN);
 		startWindowThread ();
+		ROS_INFO("Preview window enabled");
+	} else {
+		ROS_INFO("Preview window disabled");
 	}
+}
 
-	spin();
-	return 0;
+bool checkPreview(int argc, char **argv) {
+	return argc > 1 && (strcmp(argv[1], "--preview") == 0);
 }
