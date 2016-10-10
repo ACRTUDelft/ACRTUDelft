@@ -27,9 +27,14 @@ void detectBlobs(const sensor_msgs::Image& input, Mat& image, vector<KeyPoint>& 
 	detector.detect(image, keypoints);
 }
 
+/**
+ * Calculate the relative angle from the x position in the image.
+ * NOTE: this value should not be interpreted as an angle, but seen as a relative position.
+ */
 float calculateAngle(float x) {
 	return (x - IMG_WIDTH/2) / IMG_WIDTH * FOV;
 }
+
 /**
  * Get the biggest blob from a list of blobs and calculates its relative angle.
  * Returns NaN if no blob is found.
@@ -92,6 +97,9 @@ void initDetector(bool preview) {
 	}
 }
 
+/**
+ * Check if the preview must be shown.
+ */
 bool checkPreview(int argc, char **argv) {
 	return argc > 1 && (strcmp(argv[1], "--preview") == 0);
 }
