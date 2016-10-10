@@ -1,3 +1,7 @@
+#ifndef TESTING
+	#define TESTING
+#endif
+
 #include "../src/cameraToAngle/cameraToAngle.cpp"
 #include <gtest/gtest.h>
 

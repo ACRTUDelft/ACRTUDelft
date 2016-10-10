@@ -89,8 +89,10 @@ void initDetector(bool preview) {
 	detector = SimpleBlobDetector(params);
 	
 	if (showPreview) {
+#ifndef TESTING
 		cvNamedWindow(PREVIEW_SCREEN);
 		startWindowThread ();
+#endif
 		ROS_INFO("Preview window enabled");
 	} else {
 		ROS_INFO("Preview window disabled");
