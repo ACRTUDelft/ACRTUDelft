@@ -66,7 +66,8 @@ add_executable(core src/core/main.cpp)
 #############
 ## Testing ##
 #############
-
+catkin_add_gtest(sensorData-test test/test_core_sensorData.cpp)
+	target_link_libraries(sensorData-test ${catkin_LIBRARIES})
 
 catkin_add_gtest(cameraToAngle-test test/test_cameraToAngle.cpp)
 	target_link_libraries(cameraToAngle-test ${catkin_LIBRARIES})
