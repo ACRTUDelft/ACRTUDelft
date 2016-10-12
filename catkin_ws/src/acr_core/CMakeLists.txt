@@ -66,12 +66,10 @@ add_executable(core src/core/main.cpp)
 #############
 ## Testing ##
 #############
-catkin_add_gtest(sensorData-test test/test_core_sensorData.cpp)
+catkin_add_gtest(sensorData-test test/test_core/test_core_sensorData.cpp)
 	target_link_libraries(sensorData-test ${catkin_LIBRARIES})
 
-catkin_add_gtest(cameraToAngle-test test/test_cameraToAngle.cpp)
+catkin_add_gtest(cameraToAngle-test test/test_cameraToAngle/test_cameraToAngle.cpp)
 	target_link_libraries(cameraToAngle-test ${catkin_LIBRARIES})
 	target_link_libraries(cameraToAngle-test ${OpenCV_LIBRARIES})
-	configure_file(test/testLeft.png test/testLeft.png COPYONLY)
-	configure_file(test/testRight.png test/testRight.png COPYONLY)
-	configure_file(test/testEmpty.png test/testEmpty.png COPYONLY)
+	file(COPY test/test_cameraToAngle/images DESTINATION test/test_cameraToAngle)

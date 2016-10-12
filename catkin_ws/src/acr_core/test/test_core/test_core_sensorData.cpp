@@ -7,7 +7,7 @@
 #include "geometry_msgs/Vector3.h"
 #include "diagnostic_msgs/KeyValue.h"
 
-#include "../src/core/sensorData.cpp"
+#include "../../src/core/sensorData.cpp"
 #include <gtest/gtest.h>
 
 /**

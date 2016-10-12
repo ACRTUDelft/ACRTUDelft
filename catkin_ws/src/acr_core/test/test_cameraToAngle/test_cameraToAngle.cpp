@@ -2,13 +2,22 @@
 	#define TESTING
 #endif
 
-#include "../src/cameraToAngle/cameraToAngle.cpp"
+#include "../../src/cameraToAngle/cameraToAngle.cpp"
 #include <gtest/gtest.h>
 
-const sensor_msgs::Image loadImage(std::string imagePath) {
-	Mat image = imread(imagePath, CV_LOAD_IMAGE_GRAYSCALE);
+#define LEFT_IMAGES  1
+#define RIGHT_IMAGES 1
+#define EMPTY_IMAGES 1
+
+std:: string getImagePath(std:: string folder, int id) {
+	return "test/test_cameraToAngle/images/" + folder + "/" + std::to_string(id) + ".png";
+}
+
+const sensor_msgs::Image loadImage(std::string filePath) {
+	Mat image = imread(filePath, CV_LOAD_IMAGE_GRAYSCALE);
 	if(image.empty()) {
-		perror("Error loading image");
+		std::string err = "Error loading image " + filePath;
+		perror(err.c_str());
 	}
 	cv_bridge::CvImage out_msg;
 	out_msg.encoding = sensor_msgs::image_encodings::MONO8; // Or whatever
@@ -55,20 +64,31 @@ TEST(testCheckPreview, testparseArgsProgramName) {
 
 TEST(testImageProcess, left) {
 	initDetector(false);
-	float res = imageProcess(loadImage("test/testLeft.png"));
-	ASSERT_GE(0, res) << "The correct angle was not found";
+	for (int i = 0; i < LEFT_IMAGES; i++) {
+		std::string file  = getImagePath("left", i);
+		float res = imageProcess(loadImage(file));
+		ASSERT_GE(0, res) << "'images/left/" << i << ".png' should return NaN";
+	}
 }
 
 TEST(testImageProcess, right) {
 	initDetector(false);
-	float res = imageProcess(loadImage("test/testRight.png"));
-	ASSERT_LE(0, res) << "The correct angle was not found";
+	for (int i = 0; i < RIGHT_IMAGES; i++) {
+		std::string file  = getImagePath("right", i);
+		float res = imageProcess(loadImage(file));
+		ASSERT_LE(0, res) << "'images/right/" << i << ".png' should return NaN";
+	}
 }
 
 TEST(testImageProcess, empty) {
 	initDetector(false);
-	float res = imageProcess(loadImage("test/testEmpty.png"));
-	ASSERT_TRUE(std::isnan(res)) << "The correct angle was not found";
+	for (int i = 0; i < EMPTY_IMAGES; i++) {
+		std::string file  = getImagePath("none", i);
+		float res = imageProcess(loadImage(file));
+		ASSERT_TRUE(std::isnan(res)) << "'images/none/" << i << ".png' should return NaN";
+	}
+	
+	
 }
 
 TEST(testInitDetector, initPreviewTrue) {
