@@ -14,9 +14,13 @@ float SensorData::angleOfInterest = NAN;
 
 float SensorData::uDist[4] = {0, 0, 0, 0};
 float SensorData::mStat[3] = {MODULE_OK, MODULE_OK, MODULE_OK};
+
+float SensorData::rain_current = 0;
+int SensorData::rain_change = 0;
+float SensorData::rain_next = 0;
 	
 bool SensorData::isFree(int sensor) {
-	if(sensor > 3) {
+	if(sensor > 3 || sensor < 0) {
 		ROS_WARN("Undefined sensor %d!", sensor);
 		return false;
 	}
@@ -24,9 +28,9 @@ bool SensorData::isFree(int sensor) {
 }
 
 float SensorData::getDistance(int sensor) {
-	if(sensor > 3) {
+	if(sensor > 3 || sensor < 0) {
 		ROS_WARN("Undefined sensor %d!", sensor);
-		return 0;
+		return -1;
 	}
 	return uDist[sensor];
 }
@@ -64,5 +68,19 @@ void SensorData::sendTwist(float angular, float linear) {
 void SensorData::init(NodeHandle nh) {
 	twist_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 5);
 	module_pub = nh.advertise<diagnostic_msgs::KeyValue>("sensor_module", 5);
+}
+
+bool SensorData::isRaining() {
+	return rain_current > 0;
+}
+	
+int SensorData::nextRain() {
+	if (isRaining()) return 0;
+	return rain_change;
+}
+	
+float SensorData::nextRainIntensity(){
+	if (isRaining()) return rain_current;
+	return rain_next;
 }
 #endif

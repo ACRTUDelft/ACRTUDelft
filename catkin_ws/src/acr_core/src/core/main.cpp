@@ -14,6 +14,7 @@ int main(int argc, char** argv) {
 	Subscriber sub_ult = nh.subscribe("sensor_ultrasonic", 	10, SensorData::ultrasonicCallback);
 	Subscriber sub_bat = nh.subscribe("sensor_battery", 	10, SensorData::batteryCallback);
 	Subscriber sub_mod = nh.subscribe("sensor_module", 		10, SensorData::moduleCallback);
+	Subscriber sub_udo = nh.subscribe("udometer",	 		10, SensorData::udometerCallback);
 
 	Rate loop_rate(10.f);	// 10 Hz
 	State* current = new State_Idle();	// starting state
