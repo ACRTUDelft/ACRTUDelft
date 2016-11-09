@@ -3,9 +3,10 @@ project(acr_hardware)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
-  geometry_msgs
-  std_msgs
-  roscpp
+	geometry_msgs
+	std_msgs
+	roscpp
+	acr_msgs
 )
 
 ################################################
@@ -43,10 +44,12 @@ target_link_libraries(engineControl pthread)
 add_executable(moduleControl src/moduleControl/main.cpp)
 target_link_libraries(moduleControl ${catkin_LIBRARIES})
 target_link_libraries(moduleControl wiringPi)
+add_dependencies(moduleControl acr_msgs_generate_messages_cpp)
 
 add_executable(ultrasonicSensors src/ultrasonicSensors/ultrasonicSensors.cpp)
 target_link_libraries(ultrasonicSensors ${catkin_LIBRARIES})
 target_link_libraries(ultrasonicSensors wiringPi)
+add_dependencies(ultrasonicSensors acr_msgs_generate_messages_cpp)
 
 #############
 ## Install ##
