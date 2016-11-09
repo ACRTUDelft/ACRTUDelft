@@ -85,7 +85,7 @@ class SensorData {
 		}
 		
 		int status = msg.state;
-		if(status != acr_msgs::ModuleState::MODULE_OK ||  status != acr_msgs::ModuleState::MODULE_FULL) return; // Wrong types
+		if(status != acr_msgs::ModuleState::MODULE_OK && status != acr_msgs::ModuleState::MODULE_FULL) return; // Wrong types
 		mStat[module] = status;
 	}
 	

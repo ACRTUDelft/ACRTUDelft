@@ -3,9 +3,9 @@
 #endif
 
 #include "std_msgs/Float32.h"
-#include "sensor_msgs/Range.h"
+#include "acr_msgs/Ultrasonic.h"
 #include "geometry_msgs/Vector3.h"
-#include "diagnostic_msgs/KeyValue.h"
+#include "acr_msgs/ModuleState.h"
 
 #include "../../src/core/sensorData.cpp"
 #include <gtest/gtest.h>
@@ -19,9 +19,9 @@ int main (int argc, char** argv) {
 }
 
 void setRange(int sensor, float range) {
-	sensor_msgs::Range msg;
-	 msg.radiation_type = sensor;
-	 msg.range = range;
+	acr_msgs::Ultrasonic msg;
+	 msg.sensor = sensor;
+	 msg.range.range = range;
 	
 	SensorData::ultrasonicCallback(msg);
 }
@@ -34,9 +34,9 @@ void setAllRanges(float range) {
 }
 
 void setModuleState(int module, int state) {
-	diagnostic_msgs::KeyValue msg;
-	 msg.key = "module:" + std::to_string(module);
-	 msg.value = std::to_string(state);
+	acr_msgs::ModuleState msg;
+	 msg.module = module;
+	 msg.state = state;
 	
 	SensorData::moduleCallback(msg);
 }
@@ -137,35 +137,35 @@ TEST(testIsBatteryFull, testUndercharge) {
  */
 
 TEST(testNeedsService, testModulePositiveBound) {
-	setAllModuleStates(MODULE_OK);
+	setAllModuleStates(acr_msgs::ModuleState::MODULE_OK);
 	ASSERT_FALSE(SensorData::needsService(4)) << "Should return false when module does not exist";
 }
 
 TEST(testNeedsService, testmoduleNegativeBound) {
-	setAllModuleStates(MODULE_OK);
+	setAllModuleStates(acr_msgs::ModuleState::MODULE_OK);
 	ASSERT_FALSE(SensorData::needsService(-1)) << "Should return false when module does not exist";
 }
 
 TEST(testNeedsService, testModuleService) {
-	setModuleState(MODULE1, MODULE_FULL);
-	ASSERT_TRUE(SensorData::needsService(MODULE1)) << "Should return true when the module needs service";
+	setModuleState(acr_msgs::ModuleState::MODULE1, acr_msgs::ModuleState::MODULE_FULL);
+	ASSERT_TRUE(SensorData::needsService(acr_msgs::ModuleState::MODULE1)) << "Should return true when the module needs service";
 }
 
 TEST(testNeedsService, testModuleOK) {
-	setModuleState(MODULE1, MODULE_OK);
-	ASSERT_FALSE(SensorData::needsService(MODULE1)) << "Sensor should not need service when in OK state";
+	setModuleState(acr_msgs::ModuleState::MODULE1, acr_msgs::ModuleState::MODULE_OK);
+	ASSERT_FALSE(SensorData::needsService(acr_msgs::ModuleState::MODULE1)) << "Sensor should not need service when in OK state";
 }
 
 TEST(testNeedsService, testModuleIdle) {
-	setModuleState(MODULE1, MODULE_FULL);
-	setModuleState(MODULE1, MODULE_IDLE);
-	ASSERT_TRUE(SensorData::needsService(MODULE1)) << "MODULE_IDLE should not update the service state";
+	setModuleState(acr_msgs::ModuleState::MODULE1, acr_msgs::ModuleState::MODULE_FULL);
+	setModuleState(acr_msgs::ModuleState::MODULE1, acr_msgs::ModuleState::MODULE_IDLE);
+	ASSERT_TRUE(SensorData::needsService(acr_msgs::ModuleState::MODULE1)) << "MODULE_IDLE should not update the service state";
 }
 
 TEST(testNeedsService, testModuleNegative) {
-	setModuleState(MODULE1, MODULE_FULL);
-	setModuleState(MODULE1, -1);
-	ASSERT_TRUE(SensorData::needsService(MODULE1)) << "A negative state should not update the service state";
+	setModuleState(acr_msgs::ModuleState::MODULE1, acr_msgs::ModuleState::MODULE_FULL);
+	setModuleState(acr_msgs::ModuleState::MODULE1, -1);
+	ASSERT_TRUE(SensorData::needsService(acr_msgs::ModuleState::MODULE1)) << "A negative state should not update the service state";
 }
 
 /*
