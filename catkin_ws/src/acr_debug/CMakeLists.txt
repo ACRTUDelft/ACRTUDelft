@@ -4,7 +4,6 @@ project(acr_debug)
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
 	message_generation
-	diagnostic_msgs
 	geometry_msgs
 	roscpp
 	rospy
