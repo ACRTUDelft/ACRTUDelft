@@ -6,7 +6,7 @@
 #include "ros/ros.h"
 #include "std_msgs/Float32.h"
 #include "geometry_msgs/Twist.h"
-#include "geometry_msgs/Vector3.h"
+#include "acr_udometer/Udometer.h"
 #include "acr_msgs/Ultrasonic.h"
 #include "acr_msgs/ModuleState.h"
 
@@ -42,10 +42,10 @@ class SensorData {
 	
 	/* Callback for receiving messages from the udometer.
 	 */
-	static void udometerCallback(const geometry_msgs::Vector3& msg) {
-		rain_current = msg.x;
-		rain_change = msg.y;
-		rain_next = msg.z;
+	static void udometerCallback(const acr_udometer::Udometer& msg) {
+		rain_current = msg.currentRain;
+		rain_change = msg.changeTime;
+		rain_next = msg.newRain;
 	}
 	
 	/* Callback for receiving battery status updates.

@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
 	image_transport
 	qt_build
 	acr_msgs
+	acr_udometer
 )
 
 find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui)
@@ -60,6 +61,7 @@ add_executable(core src/core/main.cpp)
 
 add_dependencies(core
 	acr_msgs_generate_messages_cpp
+	acr_udometer_generate_messages_cpp
 )
  
 

@@ -4,7 +4,7 @@
 
 #include "std_msgs/Float32.h"
 #include "acr_msgs/Ultrasonic.h"
-#include "geometry_msgs/Vector3.h"
+#include "acr_udometer/Udometer.h"
 #include "acr_msgs/ModuleState.h"
 
 #include "../../src/core/sensorData.cpp"
@@ -55,10 +55,10 @@ void setBattery(float charge) {
 }
 
 void setUdometer(float currentValue, int time, float newValue) {
-	geometry_msgs::Vector3 msg;
-	 msg.x = currentValue;
-	 msg.y = time;
-	 msg.z = newValue;
+	acr_udometer::Udometer msg;
+	 msg.currentRain = currentValue;
+	 msg.changeTime = time;
+	 msg.newRain = newValue;
 	 
 	SensorData::udometerCallback(msg);
 }
