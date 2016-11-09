@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
 	cv_bridge
 	image_transport
 	qt_build
+	acr_msgs
 )
 
 find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui)
@@ -56,6 +57,10 @@ add_executable(cameraToAngle src/cameraToAngle/node_cameraToAngle.cpp)
 
 add_executable(core src/core/main.cpp)
 	target_link_libraries(core ${catkin_LIBRARIES})
+
+add_dependencies(core
+	acr_msgs_generate_messages_cpp
+)
  
 
 #############

@@ -9,9 +9,9 @@ State* State_ConcreteInteraction::update() {
 	bool interact = false;
 	for (int i = 0; i < 3; i++) {
 		if(SensorData::isFree(i)) {
-			SensorData::sendModule(i, MODULE_IDLE);
+			SensorData::sendModule(i, acr_msgs::ModuleState::MODULE_IDLE);
 		} else {
-			SensorData::sendModule(i, MODULE_INTERACT);
+			SensorData::sendModule(i, acr_msgs::ModuleState::MODULE_INTERACT);
 			interact = true;
 		}
 	}	
@@ -28,7 +28,7 @@ void State_ConcreteInteraction::switchTo() {
 }
 
 void State_ConcreteInteraction::switchFrom() {
-	SensorData::sendModule(MODULE1, MODULE_IDLE);
-	SensorData::sendModule(MODULE2, MODULE_IDLE);
-	SensorData::sendModule(MODULE3, MODULE_IDLE);
+	SensorData::sendModule(acr_msgs::ModuleState::MODULE1, acr_msgs::ModuleState::MODULE_IDLE);
+	SensorData::sendModule(acr_msgs::ModuleState::MODULE2, acr_msgs::ModuleState::MODULE_IDLE);
+	SensorData::sendModule(acr_msgs::ModuleState::MODULE3, acr_msgs::ModuleState::MODULE_IDLE);
 }

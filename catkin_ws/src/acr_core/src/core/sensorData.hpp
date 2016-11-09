@@ -1,14 +1,14 @@
 #ifndef SensorData_H
 #define SensorData_H
 
-#include "../consts.hpp"
+#include "../settings.hpp"
 
 #include "ros/ros.h"
-#include "sensor_msgs/Range.h"
 #include "std_msgs/Float32.h"
-#include "diagnostic_msgs/KeyValue.h"
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Vector3.h"
+#include "acr_msgs/Ultrasonic.h"
+#include "acr_msgs/ModuleState.h"
 
 #include <string>
 
@@ -23,8 +23,8 @@ class SensorData {
 	
 	static float angleOfInterest;
 	
-	static float uDist[4];
-	static float mStat[3];
+	static float uDist[ULTRASONIC_SENSORS];
+	static float mStat[MODULES];
 	
 	static float rain_current;
 	static int rain_change;
@@ -63,34 +63,29 @@ class SensorData {
 	
 	/* Callback for range measurements.
 	 * Only stores the received range.
-	 * 'radiation_type' is reused to represent the sensor that measured the range.
 	 */
-	static void ultrasonicCallback(const sensor_msgs::Range& msg) {	
-		int sensor = msg.radiation_type;
-		if (sensor < 0 || sensor > 3) {
+	static void ultrasonicCallback(const acr_msgs::Ultrasonic& msg) {	
+		int sensor = msg.sensor;
+		if (sensor < 0 || sensor >= ULTRASONIC_SENSORS) {
 			ROS_WARN("Unknown sensor %d", sensor);
 			return;
 		}
-		uDist[sensor] = (msg.range < ULTRASONIC_MIN_DIST) ? 0 : msg.range;
+		uDist[sensor] = (msg.range.range < ULTRASONIC_MIN_DIST) ? 0 : msg.range.range;
 	}
 	
 	/* Callback for messages from the modules.
 	 * If the value is MODULE_OK or MODULE_FULL, the status is stored.
-	 * The key needs to be of the following format: 'module:#'.
 	 */
-	static void moduleCallback(const diagnostic_msgs::KeyValue& msg) {
-		char* tmp = strdup(msg.key.c_str());
-		strtok(tmp, ":");
-		 int module = std::stoi(strtok(NULL, ":"));
-		delete tmp;
+	static void moduleCallback(const acr_msgs::ModuleState& msg) {
+		int module = msg.module;
 		
-		if (module < MODULE1 || module > MODULE3) {
+		if (module < 0 || module >= MODULES) {
 			ROS_WARN("Invalid module id %d", module);
 			return;
 		}
 		
-		int status = std::stoi(msg.value);
-		 if(status > MODULE_OK || status < MODULE_FULL) return; // Wrong types
+		int status = msg.state;
+		if(status != acr_msgs::ModuleState::MODULE_OK ||  status != acr_msgs::ModuleState::MODULE_FULL) return; // Wrong types
 		mStat[module] = status;
 	}
 	

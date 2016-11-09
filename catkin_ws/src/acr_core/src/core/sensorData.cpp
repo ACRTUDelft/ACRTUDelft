@@ -13,14 +13,16 @@ float SensorData::batteryCharge = 0.f;
 float SensorData::angleOfInterest = NAN;
 
 float SensorData::uDist[4] = {0, 0, 0, 0};
-float SensorData::mStat[3] = {MODULE_OK, MODULE_OK, MODULE_OK};
+float SensorData::mStat[3] = {	acr_msgs::ModuleState::MODULE_OK, 
+								acr_msgs::ModuleState::MODULE_OK, 
+								acr_msgs::ModuleState::MODULE_OK};
 
 float SensorData::rain_current = 0;
 int SensorData::rain_change = 0;
 float SensorData::rain_next = 0;
 	
 bool SensorData::isFree(int sensor) {
-	if(sensor > 3 || sensor < 0) {
+	if(sensor >= ULTRASONIC_SENSORS || sensor < 0) {
 		ROS_WARN("Undefined sensor %d!", sensor);
 		return false;
 	}
@@ -28,7 +30,7 @@ bool SensorData::isFree(int sensor) {
 }
 
 float SensorData::getDistance(int sensor) {
-	if(sensor > 3 || sensor < 0) {
+	if(sensor >= ULTRASONIC_SENSORS || sensor < 0) {
 		ROS_WARN("Undefined sensor %d!", sensor);
 		return -1;
 	}
@@ -40,11 +42,11 @@ bool SensorData::isBatteryFull() {
 }
 
 bool SensorData::needsService(int module) {
-	if(module > 2) {
+	if(module >= MODULES) {
 		ROS_WARN("Undefined module %d!", module);
 		return false; 
 	}
-	return (mStat[module] == MODULE_FULL);
+	return (mStat[module] == acr_msgs::ModuleState::MODULE_FULL);
 }
 
 float SensorData::pointOfInterest() {
@@ -52,9 +54,9 @@ float SensorData::pointOfInterest() {
 }
 
 void SensorData::sendModule(int module, int moduleState) {
-	diagnostic_msgs::KeyValue msg = diagnostic_msgs::KeyValue();
-	 msg.key = "module:" + std::to_string(module);
-	 msg.value = std::to_string(moduleState);
+	acr_msgs::ModuleState msg = acr_msgs::ModuleState();
+	 msg.module = module;
+	 msg.state = moduleState;
 	module_pub.publish(msg);
 }
 
@@ -67,7 +69,7 @@ void SensorData::sendTwist(float angular, float linear) {
 
 void SensorData::init(NodeHandle nh) {
 	twist_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 5);
-	module_pub = nh.advertise<diagnostic_msgs::KeyValue>("sensor_module", 5);
+	module_pub = nh.advertise<acr_msgs::ModuleState>("sensor_module", 5);
 }
 
 bool SensorData::isRaining() {

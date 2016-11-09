@@ -9,7 +9,7 @@ State* State_Approaching::update() {
 		return new State_Idle();
 	}
 	if(!isnan(SensorData::pointOfInterest())) {
-			if(!SensorData::isFree(U_FRONT_TOP)) {
+			if(!SensorData::isFree(acr_msgs::Ultrasonic::U_FRONT_TOP)) {
 			return new State_ConcreteInteraction();
 		}
 		float angle = SensorData::pointOfInterest();
