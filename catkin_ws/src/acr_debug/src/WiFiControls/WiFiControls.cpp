@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
-#include "diagnostic_msgs/KeyValue.h"
+#include "acr_msgs/ModuleState.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,8 +8,6 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <vector>
-
-#include "../consts.hpp"
 
 #define MODULES 3
 #define PORT 6000
@@ -54,12 +52,12 @@ void parseMessage(char buffer[], Publisher twist_pub, Publisher module_pub) {
 	
 	/* Create module messages */
 	for(int i = 2; i < 5; i++) {
-		diagnostic_msgs::KeyValue msg;
-		msg.key = "module:" + std::to_string(i - 2);
+		acr_msgs::ModuleState msg;
+		msg.module = i - 2;
 		if(data[i].compare("true") == 0) {
-			msg.value = std::to_string(MODULE_INTERACT); 
+			msg.state = acr_msgs::ModuleState::MODULE_INTERACT; 
 		} else {
-			msg.value = std::to_string(MODULE_IDLE);
+			msg.state = acr_msgs::ModuleState::MODULE_IDLE;
 		}
 		module_pub.publish(msg);
 	}			
@@ -70,7 +68,7 @@ int main(int argc, char **argv) {
 	NodeHandle nh;
 
 	Publisher twist_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 5);
-	Publisher module_pub = nh.advertise<diagnostic_msgs::KeyValue>("sensor_module", 5);
+	Publisher module_pub = nh.advertise<acr_msgs::ModuleState>("sensor_module", 5);
 	
 	int sockfd, newsockfd;
 	unsigned int clilen;

@@ -1,34 +1,38 @@
 <?xml version="1.0"?>
 <package>
-  <name>acr_debug</name>
-  <version>0.1.0</version>
-  <description>Package with nodes that are for debbuging the code. This includes monitoring nodes for all sensor information, a node for controlling the turtle and a node for simulating senor input.</description>
+	<name>acr_debug</name>
+	<version>0.1.0</version>
+	<description>Package with nodes that are for debbuging the code. This includes monitoring nodes for all sensor information, a node for controlling the turtle and a node for simulating senor input.</description>
 
-  <maintainer email="acr.tudelft@gmail.com">ACR Team</maintainer>
-
-
-  <!-- One license tag required, multiple allowed, one license per tag -->
-  <!-- Commonly used license strings: -->
-  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>TODO</license>
-
-  <test_depend>gtest</test_depend>
-  <buildtool_depend>catkin</buildtool_depend>
-
-  <build_depend>rospy</build_depend>
-  <build_depend>roscpp</build_depend>
-  <build_depend>geometry_msgs</build_depend>
-  <build_depend>diagnostic_msgs</build_depend>
-
-  <run_depend>rospy</run_depend>
-  <run_depend>roscpp</run_depend>
-  <run_depend>geometry_msgs</run_depend>
-  <run_depend>diagnostic_msgs</run_depend>
+	<maintainer email="acr.tudelft@gmail.com">ACR Team</maintainer>
 
 
-  <!-- The export tag contains other, unspecified, tags -->
-  <export>
-    <!-- Other tools can request additional information be placed here -->
+	<!-- One license tag required, multiple allowed, one license per tag -->
+	<!-- Commonly used license strings: -->
+	<!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+	<license>TODO</license>
 
-  </export>
+	<test_depend>gtest</test_depend>
+	<buildtool_depend>catkin</buildtool_depend>
+
+	<build_depend>rospy</build_depend>
+	<build_depend>roscpp</build_depend>
+	<build_depend>geometry_msgs</build_depend>
+
+	<build_depend>acr_msgs</build_depend>
+	<build_depend>message_generation</build_depend>
+	
+	
+	<run_depend>rospy</run_depend>
+	<run_depend>roscpp</run_depend>
+	<run_depend>geometry_msgs</run_depend>
+
+	<run_depend>acr_msgs</run_depend>
+	<run_depend>message_runtime</run_depend>
+
+	<!-- The export tag contains other, unspecified, tags -->
+	<export>
+	<!-- Other tools can request additional information be placed here -->
+
+	</export>
 </package>

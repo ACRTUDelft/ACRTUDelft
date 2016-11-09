@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import rospy
 
-from sensor_msgs.msg import Range
+from acr_msgs.msg import Ultrasonic
 
 import sys, select, termios, tty, os
 
@@ -27,15 +27,15 @@ def display():
 # Callback for when a message is recieved.
 # Checks if the sensor is valid and stores the range.
 def moduleCallback(msg):
-	sensor = msg.radiation_type
+	sensor = msg.sensor
 	if (sensor > 3) or (sensor < 0):
 		rospy.warn("Invalid sensor: " + str(val))
-	sensors[sensor] = msg.range
+	sensors[sensor] = msg.range.range
 	display()
 	
 if __name__=="__main__":
 	rospy.init_node("ultrasonic_display")
-	rospy.Subscriber("sensor_ultrasonic",Range, moduleCallback)
+	rospy.Subscriber("sensor_ultrasonic",Ultrasonic, moduleCallback)
 	
 	display()
 	rospy.spin()

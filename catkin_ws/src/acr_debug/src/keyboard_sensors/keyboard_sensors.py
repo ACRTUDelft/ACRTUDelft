@@ -2,8 +2,8 @@
 import rospy
 
 from std_msgs.msg import Float32
-from sensor_msgs.msg import Range
-from diagnostic_msgs.msg import KeyValue
+from acr_msgs.msg import Ultrasonic
+from acr_msgs.msg import ModuleState
 
 import sys, select, termios, tty, math, os
 import numpy as np
@@ -91,18 +91,18 @@ def sendFloat32(pub, fl):
 	msg.data = fl
 	pub.publish(msg)
 
-# Send keyValue messages
-def sendKeyVal(pub, key, val):	
-	kval = KeyValue()
-	kval.key = key
-	kval.value = val
-	pub.publish(kval)
+# Send ModuleState messages
+def sendModuleState(pub, module, state):	
+	msg = ModuleState()
+	msg.module = module
+	msg.state = state
+	pub.publish(msg)
 
-# Send Range messages
-def sendRange(pub, radiation_type, r):
-	msg = Range()
-	msg.radiation_type = radiation_type
-	msg.range = r
+# Send Ultrasonic messages
+def sendUltrasonic(pub, sensor, r):
+	msg = Ultrasonic()
+	msg.sensor = sensor
+	msg.range.range = r
 	pub.publish(msg)
 
 # get the pressed key from the console
@@ -117,8 +117,8 @@ if __name__=="__main__":
     	settings = termios.tcgetattr(sys.stdin)
 	
 	pub_poi = rospy.Publisher('sensor_camera', Float32, queue_size = 1)
-	pub_ult = rospy.Publisher('sensor_ultrasonic', Range, queue_size = 4)
-	pub_mod = rospy.Publisher('sensor_module', KeyValue, queue_size = 4)
+	pub_ult = rospy.Publisher('sensor_ultrasonic', Ultrasonic, queue_size = 4)
+	pub_mod = rospy.Publisher('sensor_module', ModuleState, queue_size = 4)
 	pub_bat = rospy.Publisher('sensor_battery', Float32, queue_size = 1)
 
 	rospy.init_node('acr_keyboard')
@@ -161,13 +161,13 @@ if __name__=="__main__":
 					ult[sensor] = ult_max
 				else :
 					ult[sensor] = ult_dist
-				sendRange(pub_ult, sensor, ult[sensor])
+				sendUltrasonic(pub_ult, sensor, ult[sensor])
 				continue					
 				
 			# Module service
 			if key in sensor_modules.keys():
 				op = sensor_modules[key]
-				sendKeyVal(pub_mod, "module:" + str(op[0]), str(op[1]))
+				sendModuleState(pub_mod, op[0], op[1])
 				continue
 
 	except Exception, e:
@@ -177,7 +177,7 @@ if __name__=="__main__":
 		sendFloat32(pub_poi, float('NaN'))
 		sendFloat32(pub_bat, 1.0)
 		for i in range(0, 3):
-			sendRange(pub_ult, i, ult_max)
+			sendUltrasonic(pub_ult, i, ult_max)
 		for i in range(0, 2):
-			sendKeyVal(pub_mod, "module:" + str(i), '1')
-    		termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
+			sendModuleState(pub_mod, i, 1)
+    	termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
