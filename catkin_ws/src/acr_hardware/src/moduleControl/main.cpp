@@ -1,6 +1,6 @@
 #include "ros/ros.h"
-#include "diagnostic_msgs/KeyValue.h"
-#include "../consts.hpp"
+#include "acr_msgs/ModuleState.h"
+#include "../settings.hpp"
 #include "../pins.hpp"
 
 #include <wiringPi.h>
@@ -24,24 +24,20 @@ void setupPins() {
 
 /**
  * Callback for received messages on 'sensor_modules'
- * Writes to the pins if 'SENSOR_IDLE' or 'SENSOR_INTERACT' is received
+ * Writes to the pins if 'MODULE_IDLE' or 'MODULE_INTERACT' is received
  */
-void moduleCallback(const diagnostic_msgs::KeyValue& msg) {
+void moduleCallback(const acr_msgs::ModuleState& msg) {
 
-	char* tmp = strdup(msg.key.c_str());
-	 strtok(tmp, ":");
-	 int module = std::stoi(strtok(NULL,""));	
-	delete tmp;
-	
-	if(module > MODULES) {
+	int module = msg.module;	
+	if(module >= MODULES) {
 		ROS_WARN("module %d not found.", module);
 		return;
 	}
 	
-	int status = std::stoi(msg.value);
-	if (status == MODULE_IDLE) {
+	int status = msg.state;
+	if (status == acr_msgs::ModuleState::MODULE_IDLE) {
 		digitalWrite(INTERAC[module], LOW);
-	} else if (status == MODULE_INTERACT) {
+	} else if (status == acr_msgs::ModuleState::MODULE_INTERACT) {
 		digitalWrite(INTERAC[module], HIGH);		
 	}
 }
@@ -52,29 +48,25 @@ int main(int argc, char **argv) {
 	init(argc, argv, "moduleControl");
 	NodeHandle nh;
 
-	Publisher pub = nh.advertise<diagnostic_msgs::KeyValue>("sensor_module", 2 * MODULES);
+	Publisher pub = nh.advertise<acr_msgs::ModuleState>("sensor_module", 2 * MODULES);
 	Subscriber sub = nh.subscribe("sensor_module", 10, moduleCallback);
 
-	Rate loop_rate(10.f);	// 10 Hz
+	Rate loop_rate(1.f);	// 1 Hz
 	
 	int c = 0;
 	while(ros::ok()) {
-		if (c == 20) {		// .5 Hz for module state
-			for(int i = 0; i < MODULES; i++) {	// for each module
-				diagnostic_msgs::KeyValue msg = diagnostic_msgs::KeyValue();
-				msg.key = "module:" + std::to_string(i);
-				if (digitalRead(SERVICE[i])) {
-					 msg.value = std::to_string(MODULE_FULL);
-				} else {
-					msg.value = std::to_string(MODULE_OK);
-				}
-				pub.publish(msg);
+		for(int i = 0; i < MODULES; i++) {	// for each module
+			acr_msgs::ModuleState msg = acr_msgs::ModuleState();
+			msg.module = i;
+			if (digitalRead(SERVICE[i])) {
+				 msg.state = acr_msgs::ModuleState::MODULE_FULL;
+			} else {
+				msg.state = acr_msgs::ModuleState::MODULE_OK;
 			}
-			c = 0; // reset
+			pub.publish(msg);
 		}
 		spinOnce();	
 		loop_rate.sleep();
-		c++;
 	}			
   return 0;
 }

@@ -1,6 +1,6 @@
 #include "ros/ros.h"
-#include "sensor_msgs/Range.h"
-#include "../consts.hpp"
+#include "acr_msgs/Ultrasonic.h"
+#include "../settings.hpp"
 #include "../pins.hpp"
 
 #include <wiringPi.h>
@@ -106,12 +106,12 @@ float correctRange(int sensor,float dist) {
  * Send the distance to the ros system.
  */
 void sendMessage(int sensor, float dist) {
-	sensor_msgs::Range msg;
-	 msg.radiation_type = sensor;
-	 msg.min_range = ULTRASONIC_MIN_RANGE;
-	 msg.max_range = ULTRASONIC_MAX_RANGE;
-	 msg.field_of_view = ULTRASONIC_FIELD_OF_VIEW;
-	 msg.range = dist;
+	acr_msgs::Ultrasonic msg;
+	 msg.sensor = sensor;
+	 msg.range.min_range = ULTRASONIC_MIN_RANGE;
+	 msg.range.max_range = ULTRASONIC_MAX_RANGE;
+	 msg.range.field_of_view = ULTRASONIC_FIELD_OF_VIEW;
+	 msg.range.range = dist;
 	pub.publish(msg);
 }
 
@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
 	init(argc, argv, "ultrasonicSensors");
 	NodeHandle nh;
 
-	pub = nh.advertise<sensor_msgs::Range>("sensor_ultrasonic", 2 * ULTRASONIC_SENSORS);
+	pub = nh.advertise<acr_msgs::Ultrasonic>("sensor_ultrasonic", 2 * ULTRASONIC_SENSORS);
 	Rate loop_rate(10.f);	// 10 Hz
 	
 	while (ros::ok()) {
