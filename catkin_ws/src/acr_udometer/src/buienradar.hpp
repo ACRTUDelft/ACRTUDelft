@@ -1,26 +1,26 @@
 #include "ros/ros.h"
-#include "geometry_msgs/Vector3.h"
+#include "acr_udometer/Udometer.h"
 #include <string>
 
 /**
  * Parser for the Buienradar API data.
  * Creates a message that can be send by this node.
  * The message is of the following layout:
- *  x: current rain in mm/h
- * 	y: condition change time in minutes from now (5 minute precision) (-1 when no change ahead)
- * 	z: rain value after the change in mm/h
+ *  currentRain: current rain in mm/h
+ * 	changeTime: condition change time in minutes from now (5 minute precision) (-1 when no change ahead)
+ * 	newRain: rain value after the change in mm/h
  * 
  * @param A std::string containing the data provided by the API.
- * @return A geometry_msgs/Vector3 message containing parsed weather data.
+ * @return A acr_udometer::Udometer message containing parsed weather data.
  */
-geometry_msgs::Vector3 parseBuienradarData(std::string str);
+acr_udometer::Udometer parseBuienradarData(std::string str);
 
 /**
  * Get rain data from the Buienradar API.
  * Requests the page and parses it.
- * @return A geometry_msgs/Vector3 message containing parsed weather data.
+ * @return A acr_udometer::Udometer message containing parsed weather data.
  */
-geometry_msgs::Vector3 getBuienradarData();
+acr_udometer::Udometer getBuienradarData();
 
 /**
  * Calculates the actual rain rate in mm/h from the data format used by the Buienradar API.

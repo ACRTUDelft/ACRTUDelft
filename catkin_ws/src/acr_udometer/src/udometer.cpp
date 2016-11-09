@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
 	init(argc, argv, "udometer");
 	NodeHandle n;
 
-	Publisher udometer_pub = n.advertise<geometry_msgs::Vector3>("udometer", 5);
+	Publisher udometer_pub = n.advertise<acr_udometer::Udometer>("udometer", 5);
 
 	Rate loop_rate(1.f/5.f);	// 5 seconds = 1/5 Hz
 	int loopCount;

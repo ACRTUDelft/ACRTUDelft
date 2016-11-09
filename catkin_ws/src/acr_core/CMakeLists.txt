@@ -3,10 +3,32 @@ project(acr_core)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
-  geometry_msgs
-  sensor_msgs
-  roscpp
+	geometry_msgs
+	roscpp
+	std_msgs 
+	message_generation
+	sensor_msgs
+	cv_bridge
+	image_transport
+	qt_build
+	acr_msgs
+	acr_udometer
 )
+
+find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui)
+
+include_directories(${OpenCV_INCLUDE_DIRS})
+
+include_directories(
+	${catkin_INCLUDE_DIRS}
+	${CMAKE_CURRENT_BINARY_DIR}
+)
+
+include(${QT_USE_FILE})
+
+QT4_ADD_RESOURCES(QT_RESOURCES_CPP ${QT_RESOURCES})
+QT4_WRAP_CPP(QT_MOC_HPP ${QT_MOC})
+file(GLOB_RECURSE QT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} FOLLOW_SYMLINKS *.cpp)
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -20,7 +42,8 @@ find_package(catkin REQUIRED COMPONENTS
 ###################################
 ## catkin specific configuration ##
 ###################################
-catkin_package()
+catkin_package(
+)
 
 ###########
 ## Build ##
@@ -29,12 +52,18 @@ catkin_package()
 ## Allow c++11
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-)
+add_executable(cameraToAngle src/cameraToAngle/node_cameraToAngle.cpp)
+	target_link_libraries(cameraToAngle ${catkin_LIBRARIES})
+	target_link_libraries(cameraToAngle ${OpenCV_LIBRARIES})
 
 add_executable(core src/core/main.cpp)
-target_link_libraries(core ${catkin_LIBRARIES})
+	target_link_libraries(core ${catkin_LIBRARIES})
+
+add_dependencies(core
+	acr_msgs_generate_messages_cpp
+	acr_udometer_generate_messages_cpp
+)
+ 
 
 #############
 ## Install ##
@@ -44,3 +73,10 @@ target_link_libraries(core ${catkin_LIBRARIES})
 #############
 ## Testing ##
 #############
+catkin_add_gtest(sensorData-test test/test_core/test_core_sensorData.cpp)
+	target_link_libraries(sensorData-test ${catkin_LIBRARIES})
+
+catkin_add_gtest(cameraToAngle-test test/test_cameraToAngle/test_cameraToAngle.cpp)
+	target_link_libraries(cameraToAngle-test ${catkin_LIBRARIES})
+	target_link_libraries(cameraToAngle-test ${OpenCV_LIBRARIES})
+	file(COPY test/test_cameraToAngle/images DESTINATION test/test_cameraToAngle)

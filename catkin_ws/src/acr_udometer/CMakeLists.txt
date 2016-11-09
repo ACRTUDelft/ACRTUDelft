@@ -3,14 +3,24 @@ project(acr_udometer)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  geometry_msgs
+	roscpp
+	message_generation
 )
 
 ################################################
 ## Declare ROS messages, services and actions ##
 ################################################
 
+## Generate messages in the 'msg' folder
+add_message_files(
+	FILES
+	Udometer.msg
+)
+
+generate_messages(
+	DEPENDENCIES
+	std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -20,7 +30,10 @@ find_package(catkin REQUIRED COMPONENTS
 ###################################
 ## catkin specific configuration ##
 ###################################
-catkin_package()
+
+catkin_package(
+	CATKIN_DEPENDS message_runtime
+)
 
 ###########
 ## Build ##
@@ -30,13 +43,14 @@ catkin_package()
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
 include_directories(
-  ${catkin_INCLUDE_DIRS}
+	${catkin_INCLUDE_DIRS}
 )
 
 add_executable(udometer src/udometer.cpp)
 target_link_libraries(udometer ${catkin_LIBRARIES})
 target_link_libraries(udometer curl)
 target_link_libraries(udometer curlpp)
+add_dependencies(udometer acr_msgs_generate_messages_cpp)
 
 #############
 ## Install ##
@@ -52,6 +66,7 @@ catkin_add_gtest(buienradar-test test/test_buienradar.cpp)
 target_link_libraries(buienradar-test ${catkin_LIBRARIES})
 target_link_libraries(buienradar-test curl)
 target_link_libraries(buienradar-test curlpp)
+add_dependencies(buienradar-test acr_msgs_generate_messages_cpp)
 
 
 

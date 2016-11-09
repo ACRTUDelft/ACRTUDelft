@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import rospy
 
-from diagnostic_msgs.msg import KeyValue
+from acr_msgs.msg import ModuleState
 
 import sys, select, termios, tty, os
 
@@ -28,9 +28,9 @@ def display():
 
 # Callback for when a message is recieved.
 # Gets the module name and sets its values.
-def moduleCallback(kval):
-	modName = "MODULE" + str(int(kval.key.split(":")[1]) + 1)
-	val = int(kval.value)
+def moduleCallback(msg):
+	modName = "MODULE" + str(msg.module + 1)
+	val = msg.state
 	mod = modules[modName]
 	if (val == 0):
 		modules[modName] = ("FULL", mod[1])
@@ -46,7 +46,7 @@ def moduleCallback(kval):
 	
 if __name__=="__main__":
 	rospy.init_node("module_display")
-	rospy.Subscriber("sensor_module",KeyValue, moduleCallback)
+	rospy.Subscriber("sensor_module",ModuleState, moduleCallback)
 	
 	display()
 	rospy.spin()
