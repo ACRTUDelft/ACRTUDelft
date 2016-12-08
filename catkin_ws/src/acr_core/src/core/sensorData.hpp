@@ -8,6 +8,7 @@
 #include "std_msgs/Float32.h"
 #include "diagnostic_msgs/KeyValue.h"
 #include "geometry_msgs/Twist.h"
+#include "geometry_msgs/Vector3.h"
 
 #include <string>
 
@@ -25,6 +26,10 @@ class SensorData {
 	static float uDist[4];
 	static float mStat[3];
 	
+	static float rain_current;
+	static int rain_change;
+	static float rain_next;
+	
 	
 	
   public:
@@ -33,6 +38,14 @@ class SensorData {
 	 */
 	static void angleofInterestCallback(const std_msgs::Float32& msg) {
 		angleOfInterest = msg.data;
+	}
+	
+	/* Callback for receiving messages from the udometer.
+	 */
+	static void udometerCallback(const geometry_msgs::Vector3& msg) {
+		rain_current = msg.x;
+		rain_change = msg.y;
+		rain_next = msg.z;
 	}
 	
 	/* Callback for receiving battery status updates.
@@ -80,6 +93,20 @@ class SensorData {
 		 if(status > MODULE_OK || status < MODULE_FULL) return; // Wrong types
 		mStat[module] = status;
 	}
+	
+	/* Returns true when it is raining, false otherwise
+	 */
+	static bool isRaining();
+	
+	/* Returns the time in minutes when it starts raining.
+	 * This method returns 0 when it is already raining.
+	 */
+	static int nextRain();
+	
+	/* Returns the intensity of the next shower in mm/h.
+	 * Note that when it is already raining, this method returns the current intensity.
+	 */
+	static float nextRainIntensity();
 	
 	/* Returns true if the selected ultrasonic sensor is free.
 	 * If the sensor does not exist, the method returns false.

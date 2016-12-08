@@ -10,8 +10,12 @@ Publisher pub;
  * Callback method for received messages.
  * Converts the message to the correct format and publishes it to the node.
  */
-void msgCallback(const geometry_msgs::Twist& msg) {   
-  pub.publish(msg);		
+void msgCallback(const geometry_msgs::Twist& msg) {
+  geometry_msgs::Twist relayMsg;
+  relayMsg.linear.x = msg.linear.x;
+  relayMsg.angular.z = msg.angular.z / 5.0;
+  
+  pub.publish(relayMsg);		
 }
 
 int main(int argc, char **argv) {
