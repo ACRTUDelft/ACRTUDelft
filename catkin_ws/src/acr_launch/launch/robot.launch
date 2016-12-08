@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!-- Launch file that starts the robot -->
+<launch>
+	<arg name="testing" default="false"/>
+	<arg name="use_flir" default="true"/>
+	<arg name="use_udometer" default="false"/>
+	<arg name="enable_display" default="$(arg testing)"/>
+
+	<arg if="$(arg testing)" name="ursim"/>
+
+	<!-- Launch the hardware -->
+	
+	<include if="$(arg enable_display)" file="$(find acr_debug)/display.launch"/> 
+	
+	<group if="$(arg testing)">	
+		<include file="$(find acr_debug)/turtle.launch"/>
+		<node name="keyboard_sensors" pkg="acr_debug" type="keyboard_sensors.py" launch-prefix="gnome-terminal --command"/>
+	</group>
+	<group unless="$(arg testing)"> 
+		<!-- launch actual hardware nodes -->
+		<node name="engineControl" pkg="acr_hardware" type="engineControl"/>
+		<node name="moduleControl" pkg="acr_hardware" type="moduleControl"/>
+		<node name="ultrasonicSensors" pkg="acr_hardware" type="ultrasonicSensors"/>
+	</group>
+
+	<!-- Launch nodes using FlirLepton -->
+	<group if="$(arg use_flir)">
+		<node name="flirLepton" pkg="acr_hardware" type="flirLepton" args="1 --scale"/>
+		<node name="cameraToAngle" pkg="acr_core" type="cameraToAngle"/>
+	</group>
+
+	<!-- Launch udometer node -->
+	<node if="$(arg use_udometer)" name="udometer" pkg="acr_udometer" type="udometer"/>
+
+	<!-- Launch main nodes -->
+	<group>
+		<node name="core" pkg="acr_core" type="core" output="screen"/>
+	</group>
+</launch>
